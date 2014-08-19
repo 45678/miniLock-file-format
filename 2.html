@@ -194,15 +194,14 @@ Ciphertext size in bytes      = <span id="ciphertext_size_in_bytes"></span>
 </pre>
 <p>
   The ciphertext in this file starts at <code id="start_of_ciphertext">slot #</code> and ends at <code id="end_of_ciphertext">slot #</code>.
-
+</p>
 <p>
-  The <code>fileKey</code> and <code>fileNonce</code> are required to decrypt the ciphertext.
+  miniLock relies on a <a href="https://github.com/dchest/nacl-stream-js#nacl-stream-streaming-encryption-based-on-tweetnacljs">streaming encryption scheme based on TweetNaCl</a> to encrypt and decrypt its ciphertext.
   <span class="ok">
-    Both were obtained from the <code>fileInfo</code> in <a href="#decrypt_a_permit"><span class="keyholder">?</span>’s file permit</a> that was decrypted from the header of the file.
+    The <code>fileKey</code> and <code>fileNonce</code> from <a href="#decrypt_a_permit"><span class="keyholder">?</span>’s permit</a> are required to setup the decryption scheme:
   </span>
   <span class="failed">
-    Both are obtained from the <code>fileInfo</code> section of one of the <a href="encrypted_permits">encrypted permits</a> in the header of the file.
-    We don’t have the <code>fileKey</code> or the <code>fileNonce</code> in this case because <span class="keyholder">Bobby</span>’s keys didn’t unlock any permits.
+    We don’t have the <code>fileKey</code> or the <code>fileNonce</code> because <span class="keyholder">?</span>’s keys didn’t unlock any permits.
   </span>
 </p>
 <pre>
@@ -210,8 +209,8 @@ fileKey:   <span id="ciphertext_file_key"></span>
 fileNonce: <span id="ciphertext_file_nonce"></span>
 </pre>
 <p>
-  miniLock relies on <a href="https://github.com/dchest/nacl-stream-js#nacl-stream-streaming-encryption-based-on-tweetnacljs">a streaming encryption scheme based on TweetNaCl</a> to generate its ciphertext.
-  Lets construct a stream decryptor with the <code>fileKey</code> and <code>fileNonce</code> to process the ciphertext in 1MB chunks:
+  With these keys on hand we are ready to construct a stream decryptor.
+  Configure it to process the ciphertext with a maximum chunk size of 1MB:
 </p>
 <pre>
 maxChunkSize = 1024 * 1024
@@ -222,7 +221,7 @@ decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryp
 <p>
   In version 2, the first chunk of ciphertext is reserved for the file <code>name</code>, <code>type</code> and <code>time</code> attributes.
   The decrypted chunk is always <code>408</code> bytes long.
-  The encrypted chunk is <code>428</code> bytes because the encryption routine adds <code>20</code> bytes.
+  The encrypted chunk is <code>428</code> bytes because the encryption scheme adds <code>20</code> bytes.
 </p>
 <p>Read and decrypt the first chunk of ciphertext like this:</p>
 <pre>
@@ -251,7 +250,7 @@ name           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeu
   The next <code>128</code> slots in the chunk are reserved to record the file <code>type</code>.
   If present, <code>type</code> is expected to be a registered media type such as <code>text/plain</code> or <code>image/jpeg</code>.
   It may also be blank.
-  The fixed size of 128 slots was informed by the media type <a href="http://tools.ietf.org/html/rfc6838#section-4.2">naming requirements defined in RFC6838</a>.
+  The fixed size of <code>128</code> slots was informed by the media type <a href="http://tools.ietf.org/html/rfc6838#section-4.2">naming requirements defined in RFC6838</a>.
   Slice, filter and then encode the bytes like so:
 </p>
 <pre>
