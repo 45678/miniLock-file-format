@@ -234,7 +234,7 @@ decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecr
 <h1>File Name<a id="file_name"></a></h1>
 <p>
   The first <code>256</code> slots in the chunk are reserved for the <code>name</code> of the file.
-  To get it, slice off the first <code>256</code> decrypted bytes, filter out any <code>null</code> bytes and then encode the remaing bytes in UTF-8.
+  To get it, slice off the first <code>256</code> bytes, filter out any <code>null</code> bytes and then encode the remaing bytes in UTF-8.
   Don’t be surprised if the <code>name</code> is blank because that is a possibility.
 </p>
 <pre>
