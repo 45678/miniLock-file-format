@@ -210,7 +210,7 @@ fileKey:   <span id="ciphertext_file_key"></span>
 fileNonce: <span id="ciphertext_file_nonce"></span>
 </pre>
 <p>
-  miniLock relies on <a href="https://github.com/dchest/nacl-stream-js#nacl-stream-streaming-encryption-based-on-tweetnacljs">a streaming encryption routine based on TweetNaCl</a> to generate its ciphertext.
+  miniLock relies on <a href="https://github.com/dchest/nacl-stream-js#nacl-stream-streaming-encryption-based-on-tweetnacljs">a streaming encryption scheme based on TweetNaCl</a> to generate its ciphertext.
 
   Lets construct a streaming decryptor with the <code>fileKey</code> and <code>fileNonce</code> that will process the ciphertext in 1MB chunks:
 </p>
