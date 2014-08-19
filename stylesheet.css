@@ -41,11 +41,13 @@ body.ready nav > div:nth-child(4) { transition-delay: 200ms; }
 body.ready nav > div:nth-child(5) { transition-delay: 250ms; }
 
 body.loading #title,
+body.loading #discuss,
 body.loading #introduction_section,
 body.loading article.blob {
   opacity: 0;
 }
 body.ready #title,
+body.ready #discuss,
 body.ready #introduction_section,
 body.ready article.blob {
   opacity: 1;
