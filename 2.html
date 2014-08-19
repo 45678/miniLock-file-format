@@ -40,7 +40,6 @@
     <pre id="summary_of_decrypted_ciphertext" class="ciphertext"></pre>
     <pre id="summary_of_decrypted_header" class="header"></pre>
   </div>
-
   <p>Now imagine you are a computer. Still here? OK, proceed:</p>
 </section>
 
@@ -211,11 +210,13 @@ fileKey:   <span id="ciphertext_file_key"></span>
 fileNonce: <span id="ciphertext_file_nonce"></span>
 </pre>
 <p>
-  Construct a stream decryptor that will process the ciphertext in 1MB chunks.
+  miniLock relies on <a href="https://github.com/dchest/nacl-stream-js#nacl-stream-streaming-encryption-based-on-tweetnacljs">a streaming encryption routine based on TweetNaCl</a> to generate its ciphertext.
+
+  Lets construct a streaming decryptor with the <code>fileKey</code> and <code>fileNonce</code> that will process the ciphertext in 1MB chunks:
 </p>
 <pre>
 maxChunkSize = 1024 * 1024
-decryptor = NACL.stream.createDecryptor(fileKey, fileNonce, maxChunkSize)
+decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryptorkey-nonce-maxchunklength">NaCl.stream.createDecryptor</a>(fileKey, fileNonce, maxChunkSize)
 </pre>
 
 <h1>The First Chunk <em>152-bytes longer in Version 2</em><a id="the_first_chunk"></a></h1>
@@ -228,7 +229,7 @@ decryptor = NACL.stream.createDecryptor(fileKey, fileNonce, maxChunkSize)
 <pre>
 startOfCiphertext = <span id="start_of_ciphertext_for_first_chunk"></span>
 encryptedChunk = file.read(startOfCiphertext, startOfCiphertext+428)
-decryptedChunk = decryptor.decryptChunk(encryptedChunk, false)
+decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, false)
 </pre>
 
 <h1>File Name<a id="file_name"></a></h1>
