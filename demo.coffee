@@ -110,7 +110,7 @@ renderDecryptedFile = (operation, decrypted, header, sizeOfHeader) ->
   renderDecryptStatus(operation, decrypted)
   renderMagicBytes(operation)
   renderSizeOfHeader(sizeOfHeader)
-  renderHeader(decrypted, header)
+  renderHeader(decrypted, header, sizeOfHeader)
   renderCiphertext(operation, decrypted, header, sizeOfHeader)
   renderScrollGraph(operation, sizeOfHeader)
   renderSectionSizeGraphic(operation, sizeOfHeader)
@@ -173,8 +173,10 @@ renderSizeOfHeader = (sizeOfHeader) ->
   $('#size_of_header_bytes').html(sizeOfHeader)
 
 
-renderHeader = (decrypted, header) ->
+renderHeader = (decrypted, header, sizeOfHeader) ->
   $('#header_section span.keyholder').html(window.keys.name)
+  $('#end_of_header_bytes').html(12+sizeOfHeader)
+  $('#end_slot_of_header_bytes').html("slot #{12+sizeOfHeader}")
   $('#parsed_header').html templates["parsed_header"](
     version: header.version
     ephemeral: header.ephemeral

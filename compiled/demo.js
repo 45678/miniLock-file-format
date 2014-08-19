@@ -178,7 +178,7 @@
     renderDecryptStatus(operation, decrypted);
     renderMagicBytes(operation);
     renderSizeOfHeader(sizeOfHeader);
-    renderHeader(decrypted, header);
+    renderHeader(decrypted, header, sizeOfHeader);
     renderCiphertext(operation, decrypted, header, sizeOfHeader);
     renderScrollGraph(operation, sizeOfHeader);
     return renderSectionSizeGraphic(operation, sizeOfHeader);
@@ -268,9 +268,11 @@
     return $('#size_of_header_bytes').html(sizeOfHeader);
   };
 
-  renderHeader = function(decrypted, header) {
+  renderHeader = function(decrypted, header, sizeOfHeader) {
     var byte, ephemeralArray, ephemeralKey, permitForRender;
     $('#header_section span.keyholder').html(window.keys.name);
+    $('#end_of_header_bytes').html(12 + sizeOfHeader);
+    $('#end_slot_of_header_bytes').html("slot " + (12 + sizeOfHeader));
     $('#parsed_header').html(templates["parsed_header"]({
       version: header.version,
       ephemeral: header.ephemeral,

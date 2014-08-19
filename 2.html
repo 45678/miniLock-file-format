@@ -74,11 +74,11 @@
 <p>
   The <code>header</code> of a miniLock file is a UTF-8 encoded JSON string.
   The header bytes always start at <code>slot 12</code>.
-  In this file the header bytes end at <code>slot 645</code>.
+  In this file the header bytes end at <code id="end_slot_of_header_bytes">slot 645</code>.
   Read, encode and parse the header bytes like this:
 </p>
 <pre>
-headerBytes = file.read(12, 645)
+headerBytes = file.read(12, <span id="end_of_header_bytes">645</span>)
 serializedHeader = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(headerBytes)
 header = <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">JSON.parse</a>(serializedHeader)
 </pre>
