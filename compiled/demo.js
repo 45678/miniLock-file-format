@@ -30,6 +30,14 @@
         var baseUrl, extendArrow, hash;
         hash = (function() {
           switch (false) {
+            case !(window.scrollY >= $('#encrypt_time').offset().top):
+              return '#encrypt_time';
+            case !(window.scrollY >= $('#media_type').offset().top):
+              return '#media_type';
+            case !(window.scrollY >= $('#file_name').offset().top):
+              return '#file_name';
+            case !(window.scrollY >= $('#the_first_chunk').offset().top):
+              return '#the_first_chunk';
             case !(window.scrollY >= $('#ciphertext').offset().top):
               return '#ciphertext';
             case !(window.scrollY >= $('#decrypt_a_permit').offset().top):

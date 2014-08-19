@@ -17,6 +17,10 @@ $(document).ready (event) ->
     $(document.body).removeClass("loading").addClass("ready")
     $(document).on "scroll", ->
       hash = switch
+        when window.scrollY >= $('#encrypt_time').offset().top then '#encrypt_time'
+        when window.scrollY >= $('#media_type').offset().top then '#media_type'
+        when window.scrollY >= $('#file_name').offset().top then '#file_name'
+        when window.scrollY >= $('#the_first_chunk').offset().top then '#the_first_chunk'
         when window.scrollY >= $('#ciphertext').offset().top then '#ciphertext'
         when window.scrollY >= $('#decrypt_a_permit').offset().top then '#decrypt_a_permit'
         when window.scrollY >= $('#decoding_the_header').offset().top then '#decoding_the_header'

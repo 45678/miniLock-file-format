@@ -218,7 +218,7 @@ maxChunkSize = 1024 * 1024
 decryptor = NACL.stream.createDecryptor(fileKey, fileNonce, maxChunkSize)
 </pre>
 
-<h1>The First Chunk <em>152 more bytes in Version 2</em></h1>
+<h1>The First Chunk <em>152-bytes longer in Version 2</em><a id="the_first_chunk"></a></h1>
 <p>
   In version 2, the first chunk of ciphertext is reserved for the file <code>name</code>, <code>type</code> and <code>time</code> attributes.
   The decrypted chunk is always <code>408</code> bytes long.
@@ -231,7 +231,7 @@ encryptedChunk = file.read(startOfCiphertext, startOfCiphertext+428)
 decryptedChunk = decryptor.decryptChunk(encryptedChunk, false)
 </pre>
 
-<h1>File Name</h1>
+<h1>File Name<a id="file_name"></a></h1>
 <p>
   The first <code>256</code> slots in the chunk are reserved for the <code>name</code> of the file.
   To get it, slice off the first <code>256</code> decrypted bytes, filter out any <code>null</code> bytes and then encode the remaing bytes in UTF-8.
@@ -246,7 +246,7 @@ name           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeu
 <code id="decrypted_name"></code> is the decrypted <code>name</code> of this file.
 </p>
 
-<h1>Media Type <em>Introduced in Version 2</em></h1>
+<h1>Media Type <em>Introduced in Version 2</em><a id="media_type"></a></h1>
 <p>
   The next <code>128</code> slots in the chunk are reserved to record the file <code>type</code>.
   If present, <code>type</code> is expected to be a registered media type such as <code>text/plain</code> or <code>image/jpeg</code>.
@@ -263,7 +263,7 @@ type           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeu
 <code id="decrypted_type"></code> is the decrypted <code>type</code> of this file.
 </p>
 
-<h1>Encrypt Time <em>Introduced in Version 2</em></h1>
+<h1>Encrypt Time <em>Introduced in Version 2</em><a id="encrypt_time"></a></h1>
 <p>
   The last <code>24</code> slots in the chunk are reserved to record the <code>time</code> when the file was encrypted.
   <code>time</code> is expected to be a <a href="http://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations">ISO 8601 extended format timestamp</a> or a blank string.
