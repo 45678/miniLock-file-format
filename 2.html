@@ -116,19 +116,19 @@ ephemeral = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64
 </p>
 
 <p>
-  Next, lets decode the <code>nonce</code> and <code>encryptedPermit</code> of each decryptInfo pair:
+  Next we’ll decode each <code>nonce</code> and <code>encryptedPermit</code> in <code>header.decryptInfo</code>:
 </p>
 
 <pre>
 encryptedPermits = {}
-for nonce, encryptedPermit of header.decryptInfo
-  nonce = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(nonce)
-  value = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(encryptedPermit)
+for encodedNonce, encodedEncryptedPermit of header.decryptInfo
+  nonce = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(encodedNonce)
+  encryptedPermit = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(encodedEncryptedPermit)
   encryptedPermits[nonce] = encryptedPermit
 </pre>
 
 <p>
-  Now we have <code id="number_of_permits"></code> decoded permits that we can attempt to unlock.
+  Now we have <code id="number_of_permits"></code> encrypted permits that we can attempt to unlock with our keys.
 </p>
 
 <h1>Decrypt a Permit<a id="decrypt_a_permit"></a></h1>
