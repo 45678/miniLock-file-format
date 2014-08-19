@@ -1,0 +1,563 @@
+body, section, div, pre, fieldset, h1, p, pre { position: relative; box-sizing: border-box; margin: 0; }
+
+a { text-decoration: none; color: inherit; }
+a:link { text-decoration: underline; }
+
+h1 { font:inherit; margin:15px 0 15px; font-weight: bold; }
+h1 em { font-style:normal; font-weight:normal; opacity:0.5; border:1px dotted black; padding:0 5px; }
+
+code { background-color: hsla(0, 0%, 100%, 0.33); padding:0px 3px; margin: 0px -3px;}
+
+p { margin: 15px 0; }
+
+pre { background-color: hsla(0, 0%, 100%, 0.33); overflow:auto; padding: 0px 5px; margin: 20px -5px 20px;}
+
+/* -------- -------- -------- -------- */
+
+body {
+  font: 19px/30px 'Courier', 'Consolas', monospace;
+  letter-spacing: -0.33px;
+  background: hsl(40, 2%, 66%);
+  margin: 30px 26px 30px 290px;
+  min-width: 880px;
+  max-width: 1000px;
+}
+body #introduction {
+  position: absolute;
+  top: -30px;
+}
+
+body.loading nav > div {
+  opacity: 0;
+}
+body.ready nav > div {
+  opacity: 1;
+  transition: opacity 100ms linear;
+}
+body.ready nav > div:nth-child(1) { transition-delay: 50ms; }
+body.ready nav > div:nth-child(2) { transition-delay: 100ms; }
+body.ready nav > div:nth-child(3) { transition-delay: 150ms; }
+body.ready nav > div:nth-child(4) { transition-delay: 200ms; }
+body.ready nav > div:nth-child(5) { transition-delay: 250ms; }
+
+body.loading #title,
+body.loading #introduction_section,
+body.loading article.blob {
+  opacity: 0;
+}
+body.ready #title,
+body.ready #introduction_section,
+body.ready article.blob {
+  opacity: 1;
+  transition: opacity 300ms linear 0ms;
+}
+
+/* -------- -------- -------- -------- */
+
+#title {
+  margin: 60px 0 20px;
+}
+
+#title h1 {
+  padding-left: 96px;
+  margin: 0;
+  margin-left: 10px;
+  font-weight: normal;
+}
+
+#title #minilock_file_icon {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 120px;
+}
+#discuss {
+  margin: 0px 0 40px;
+}
+
+
+#discuss a {
+  color: hsl(0, 0%, 50%);
+}
+#discuss a:visited {
+  color: hsl(300, 100%, 25%);
+}
+
+/* -------- -------- -------- -------- */
+
+#decrypt_keys {
+  border-radius: 10px;
+  overflow:hidden;
+  border: 1px solid hsla(0, 0%, 0%, 0.33);
+  margin: 19px -1px;
+  margin-right: 135px;
+}
+
+#decrypt_keys div.named_key {
+  height: 41px;
+  border-top: 1px solid hsla(0, 0%, 0%, 0.33);
+  margin: -1px 0px 0px;
+}
+
+a.secret_key {
+  display: block;
+  padding: 5px 10px 5px 10px;
+  vertical-align: top;
+  color: hsla(0, 0%, 0%, 0.33);
+  background-color: hsl(0, 0%, 80%);
+  background-image: url(faces.png);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+  transition: background-color 100ms linear;
+}
+a.secret_key label {
+  color: black;
+  margin-left: 3.5ex;
+}
+a.secret_key span.byte_stream_size {
+  margin-left: 1ex;
+}
+a.secret_key:hover {
+  cursor: default;
+  background-color: hsl(40, 45%, 80%);
+}
+a.secret_key.selected {
+  background-color: hsl(40, 45%, 80%);
+}
+a.secret_key.fits {
+  background-position: 10px bottom;
+}
+a.secret_key.jams {
+  background-position: 10px top;
+}
+
+/* -------- -------- -------- -------- */
+
+#decrypt_status {
+  height: 30px;
+  overflow: hidden;
+  margin: 15px 0;
+
+}
+#decrypt_status em {
+  font-style: normal;
+  padding: 2px 5px 2px 7px;
+  border: 1px solid hsla(0, 0%, 0%, 0.33);
+}
+#decrypt_status > div.expired em {
+  background-color: hsla(0, 0%, 100%, 0);
+}
+#decrypt_status > div {
+  min-height: 30px;
+}
+#decrypt_status > div.expired {
+  opacity: 0.5;
+}
+#decrypt_status > div.outgoing {
+  margin-top: -30px;
+  transition: margin-top 200ms ease-out 100ms;
+}
+
+/* -------- -------- -------- -------- */
+#unencrypted_summary,
+#decrypt_summary {
+  box-shadow: 0px 1px 5px hsla(0, 0%, 0%, 0.33);
+  margin: 20px 50px 20px 0;
+}
+#unencrypted_summary pre,
+#decrypt_summary pre {
+  padding: 5px 10px 5px;
+  margin: 0;
+  overflow: hidden;
+}
+
+
+#unencrypted_summary b.size_graphic {
+  display: inline-block;
+  background: hsla(0, 0%, 0%, 0.33);
+  border: 1px dotted hsla(0, 0%, 0%, 0.5);
+  height: 12px;
+  vertical-align: middle;
+  margin-top: -3px;
+}
+
+span.encoded_permit {
+  color: hsl(0, 0%, 50%);
+}
+
+
+#unencrypted_summary pre {
+  background: hsl(0, 0%, 80%);
+}
+
+#decrypt_summary.empty {
+  border-color: hsl(350, 45%, 66%);
+}
+#decrypt_summary pre:first-child {
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+  padding: 5px 10px 4px;
+}
+#decrypt_summary pre.header,
+#decrypt_summary pre.ciphertext {
+  transition: all 300ms linear;
+}
+#decrypt_summary.empty pre.header,
+#decrypt_summary.empty pre.ciphertext {
+  color: hsl(0, 0%, 50%);
+  background-color: hsl(0, 0%, 70%);
+}
+
+/* -------- -------- -------- -------- */
+
+fieldset {
+  display:block;
+  font:inherit;
+  /*border: 2px groove hsl(0, 0%, 75%);*/
+  padding: 0px 8px;
+
+}
+
+textarea, input[type=text] {
+  display: block;
+  font: inherit;
+  border: none;
+  outline: none;
+  padding: 0;
+  width: 100%;
+  margin: 0;
+  background: transparent;
+  box-sizing: border-box;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+div.file.input {
+  width: 96px;
+  height: 120px;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+div.file.input fieldset {
+  z-index: 1;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: none;
+  padding: 0;
+  border: none;
+  margin: auto;
+}
+
+div.file.input fieldset img {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+}
+
+div.file.input textarea {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: none;
+  outline: none;
+  padding: 7px 10px;
+  margin: auto;
+  resize: none;
+}
+
+div.file.input input[type=text] {
+  position: absolute;
+  bottom: -20px;
+  width: 150%;
+  margin-left: -25%;
+  text-align: center;
+}
+
+#input_files {
+  height: 120px;
+  margin: 0;
+  width: 220px;
+  position: fixed;
+  top: 280px;
+  left: 15px;
+}
+
+#input_files > img.arrow {
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
+  margin-left: -2px;
+  opacity: 0.25;
+}
+
+#input_files > img.arrow.first {
+  left: 45px;
+}
+
+#input_files > img.arrow.second {
+  left: 155px;
+}
+#input_files > img.arrow.second.extended {
+  left: 200px;
+  transition: left 150ms ease-out 150ms;
+}
+
+
+#input_files > div.file.input {
+  position: absolute;
+}
+
+#input_files > div.unencrypted.file.input {
+  left: 0;
+}
+#input_files > div.encrypted.file.input {
+  left: 110px;
+}
+
+#input_files > div.encrypted.file.input fieldset {
+  padding: 68px 10px 0;
+}
+#input_files > div.encrypted.file.input legend {
+  position: absolute;
+  top: 52px;
+  padding: 0;
+  margin: 0;
+}
+
+#input_files #encrypted_by {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 7px;
+  z-index: 2;
+}
+
+#input_files #encrypted_by select {
+  margin: 0 -3px;
+  display: block;
+  width: 100%;
+  font: inherit;
+}
+
+input::-webkit-input-placeholder  {
+  color: hsla(0, 0%, 0%, 0.5);
+}
+
+input[type=checkbox] {
+  font: inherit;
+  margin: 0 -3px 0 0;
+}
+
+
+
+/* Nav */
+
+nav {
+  position: fixed;
+  top: 0px;
+  left: 15px;
+  width: 205px;
+  margin-top: 0px;
+}
+
+nav > div {
+  /*height: 55px;*/
+  color: black;
+  margin: 10px 0;
+  text-align: right;
+}
+
+nav a:link {
+  padding: 5px 10px;
+  margin: 0;
+  color: black;
+  outline: 1px dotted hsla(0, 0%, 0%,0.5);
+  display: inline-block;
+  text-decoration: none;
+}
+
+
+/* -------- -------- -------- -------- */
+
+article.blob {
+  margin: 0px -1px -1px -1px;
+  padding-left: 50px;
+  border-left: 1px dotted hsla(0, 0%, 0%, 0.5);
+  border-right: 1px dotted hsla(0, 0%, 0%, 0.5);
+  border-bottom: 1px dotted hsla(0, 0%, 0%, 0.5);
+}
+
+article.blob > section {
+  padding: 0px 30px;
+  border-top: 1px dotted hsla(0, 0%, 0%, 0.5);
+  margin-top: -1px;
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0);
+  margin-bottom: -1px;
+}
+
+article.blob > section > h1 > a {
+  position: absolute;
+  top: -30px;
+}
+
+article.blob > section > h1.invisible {
+  height: 0px;
+  margin: 0px;
+  overflow: hidden;
+}
+
+#magic_bytes_section {
+  height: 240px;
+}
+
+#size_of_header_section {
+  height: 120px;
+}
+
+#header_section {
+}
+
+#ciphertext_section {
+  border-bottom: 1px dotted hsla(0, 0%, 0%, 0.5);
+}
+
+
+
+/* -------- -------- -------- -------- */
+
+#scrollgraph {
+  width: 11px;
+  position: fixed;
+  top: 0; bottom: 0; right: 0;
+}
+
+/* -------- -------- -------- -------- */
+
+#section_sizes_graphic {
+  width: 5px;
+  position: fixed;
+  top: 0; bottom: 0; left: 0px;
+}
+
+/* -------- -------- -------- -------- */
+
+div.margin_bytes {
+  position: absolute; top: 0px; left: -100px;
+  width: 100px;
+  z-index: 1;
+  overflow: visible;
+}
+div.margin_bytes .snip {
+  border-top: 1px dashed hsl(0, 0%, 33%);
+  background: hsl(0, 0%, 66%);
+  border-bottom: 1px dashed hsl(0, 0%, 33%);
+  border-right: 1px dotted hsl(0, 0%, 33%);
+  z-index: 1;
+}
+
+div.margin_bytes .byte {
+  width: 100px;
+  height: 30px;
+  color: hsla(0, 0%, 0%, 0.5);
+}
+div.margin_bytes .index, div.margin_bytes .value {
+  width: 50px;
+  height: 31px;
+
+}
+div.margin_bytes div.index {
+  position: absolute; left: 0px; top: 0;
+  padding-right: 5px;
+
+}
+div.margin_bytes div.value {
+  position: absolute; left: 50px; top: 0;
+  text-align: right;
+  border-top: 1px dotted hsla(0, 0%, 0%, 0.5);
+  margin-top: -1px;
+}
+
+#ciphertext_section div.margin_bytes div.value:last-child {
+  border-bottom: 1px dotted hsla(0, 0%, 0%, 0.5);
+}
+
+
+/* -------- -------- -------- -------- */
+
+span.byte_stream {
+  display:inline-block;
+  vertical-align: top;
+  margin: -2px 0 0;
+  color: hsla(0, 0%, 0%, 0.33);
+}
+
+span.byte_stream_size {
+  color: hsla(0, 0%, 0%, 0.33);
+}
+
+span.byte_stream b.byte {
+  display:inline-block;
+  opacity: 0.66;
+  vertical-align: middle;
+  margin: 0px 1px 0px 1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 10px;
+  border: 2px solid hsl(0, 0%, 0%);
+  position:relative;
+  top: 0px;
+  transition: height 66ms linear;
+}
+span.byte_stream b.byte:hover {
+  height: 18px;
+  transition: height 0ms linear;
+}
+
+
+
+/* Colors -------- -------- -------- */
+
+#magic_bytes_section,
+#magic_bytes_section div.byte div.value,
+a.link_to_magic_bytes,
+#scrollgraph div.magic,
+#section_sizes_graphic div.magic {
+  background-color: hsl(300, 50%, 70%);
+}
+
+#size_of_header_section,
+#size_of_header_section div.byte div.value,
+a.link_to_size_of_header,
+#scrollgraph div.size_of_header,
+#section_sizes_graphic div.size_of_header {
+  background-color: hsl(250, 50%, 75%);
+}
+
+#header_section,
+#decrypt_summary pre.header,
+#header_section div.byte div.value,
+#unencrypted_summary b.header,
+a.link_to_header,
+#scrollgraph div.header,
+#section_sizes_graphic div.header {
+  background-color: hsl(200, 50%, 66%);
+}
+
+#ciphertext_section,
+#ciphertext_section div.byte div.value,
+a.link_to_ciphertext,
+#decrypt_summary pre.ciphertext,
+#unencrypted_summary b.ciphertext,
+#scrollgraph div.ciphertext,
+#section_sizes_graphic div.ciphertext {
+  background-color: hsl(150, 50%, 66%);
+}
+
+
+#decrypt_status.ok em,
+a.secret_key.selected.fits {
+  background-color: hsl(40, 90%, 66%);
+}
+#decrypt_status.failed em,
+a.secret_key.selected.jams {
+  background-color: hsl(350, 90%, 66%);
+}

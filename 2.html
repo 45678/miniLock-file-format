@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>miniLock File Format Version 1</title>
+  <link rel="stylesheet" href="stylesheet.css" charset="utf-8">
+  <script src="node_modules/miniLockLib/scripts/miniLockLib.js" charset="utf-8"></script>
+  <script src="node_modules/zepto/zepto.min.js" charset="utf-8"></script>
+  <script src="node_modules/underscore/underscore.js" charset="utf-8"></script>
+  <script src="node_modules/async/lib/async.js" charset="utf-8"></script>
+  <script src="compiled/characters.js" charset="utf-8"></script>
+  <script src="compiled/templates.js" charset="utf-8"></script>
+  <script src="compiled/demo.js" charset="utf-8"></script>
+</head>
+<body class="loading"><a id="introduction"></a>
+
+<div id="title">
+  <h1><strong>miniLock</strong></h1>
+  <h1>File Format</h1>
+  <h1><strong>Version 2</strong></h1>
+  <h1>DRAFT</h1>
+  <img id="minilock_file_icon" src="minilock_file_icon_black.svg">
+</div>
+<p id="discuss">
+  <a href="https://github.com/kaepora/miniLock/pull/136">Discuss this proposal at miniLock HQ</a>
+</p>
+<section id="introduction_section">
+  <p>
+    When you read a miniLock file without a key these details are available:
+  </p>
+  <div id="unencrypted_summary"></div>
+  <p>
+    A secret key is required to decrypt the file and see more details.
+  </p>
+  <p>
+    Lets try to open <code>Secret.minilock</code> with one of these keys:
+  </p>
+  <div id="decrypt_keys"></div>
+  <div id="decrypt_status"><div class="empty_placeholder"></div></div>
+  <div id="decrypt_summary">
+    <pre id="summary_of_decrypted_ciphertext" class="ciphertext"></pre>
+    <pre id="summary_of_decrypted_header" class="header"></pre>
+  </div>
+
+  <p>Now imagine you are a computer. Still here? OK, proceed:</p>
+</section>
+
+<article class="blob">
+
+<section id="magic_bytes_section"><div class="margin_bytes"></div>
+<h1 class="invisible">Magic Bytes<a id="magic_bytes"></a></h1>
+<p>
+  The first eight slots of the file are the miniLock magic bytes.
+  Please use this unique sequence of bytes to identify miniLock encrypted files in your own computer programs.
+</p>
+<p>
+  Magic Bytes in Base10: <code id="magic_bytes_in_base10"></code><br>
+  Magic Bytes in Base16: <code id="magic_bytes_in_base16"></code><br>
+</p>
+<p>
+  The bytes spell <code>miniLock</code> in UTF-8. They are magic!
+</p>
+</section>
+
+<section id="size_of_header_section"><div class="margin_bytes"></div>
+<h1 class="invisible">Size of Header<a id="size_of_header"></a></h1>
+<p>
+  The next four slots specify the size of the header in bytes.
+  Interpret this <a href="http://en.wikipedia.org/wiki/Endianness#Little-endian">four-byte little-endian word</a> to get the size as a decimal number.
+  The word in this file indicates the header is <code id="size_of_header_bytes">?</code> bytes long.
+</p>
+</section>
+
+<section id="header_section"><div class="margin_bytes"></div>
+<h1 class="invisible">Header<a id="header"></a></h1>
+<p>
+  The <code>header</code> of a miniLock file is a UTF-8 encoded JSON string.
+  The header bytes always start at <code>slot 12</code>.
+  In this file the header bytes end at <code>slot 645</code>.
+  Read, encode and parse the header bytes like this:
+</p>
+<pre>
+headerBytes = file.read(12, 645)
+serializedHeader = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(headerBytes)
+header = <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">JSON.parse</a>(serializedHeader)
+</pre>
+<p>
+  The parsed <code>header</code> of this file looks like this:
+</p>
+<pre id="parsed_header"></pre>
+<p>
+  <code>version</code> specifies the miniLock file format version number.
+  Usually it is <code>1</code> right now. Someday soon it might be <code>2</code> more often.
+</p>
+<p>
+  <code>ephemeral</code> is a Base64 encoded 32-byte public key.
+  It is one of twp keys that is required to <a href="#decrypt_a_permit">decrypt a permit</a>.
+</p>
+<p>
+  <code>decryptInfo</code> contains a <code>nonce:encryptedPermit</code> pair for each recipient.
+  Each <code>nonce</code> is a Base64 encoded 16-byte unique nonce that is required to decrypt the <code>encryptedPermit</code>.
+  Each <code>encryptedPermit</code> is a Base64 encoded string of encrypted and serialized JSON bytes.
+</p>
+
+
+<h1>Decoding the Header<a id="decoding_the_header"></a></h1>
+<p>
+  Since most members of <code>header</code> are Base64 encoded
+  we will need to decode them before we go any further.
+  First lets decode the <code>ephemeral</code> key:
+</p>
+<pre>
+ephemeral = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(header.ephemeral)
+</pre>
+<p>
+  OK, <code>ephemeral</code> key is <span id="decoded_ephemeral_key"></span>.
+  We will use it later when we attempt to <a href="#decrypt_a_permit">decrypt a permit</a>.
+</p>
+
+<p>
+  Next, lets decode the <code>nonce</code> and <code>encryptedPermit</code> of each decryptInfo pair:
+</p>
+
+<pre>
+encryptedPermits = {}
+for nonce, encryptedPermit of header.decryptInfo
+  nonce = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(nonce)
+  value = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(encryptedPermit)
+  encryptedPermits[nonce] = encryptedPermit
+</pre>
+
+<p>
+  Now we have <code id="number_of_permits"></code> decoded permits that we can attempt to unlock.
+</p>
+
+<h1>Decrypt a Permit<a id="decrypt_a_permit"></a></h1>
+<p>
+  miniLock permits are encrypted with the <a href="http://nacl.cr.yp.to/box.html">public-key authenticated encryption scheme</a> defined in the <a href="http://nacl.cr.yp.to/">Networking and Cryptography library</a>.
+  Ports of this popular library are available for many programming languages.
+  This document features <a href="https://dchest.github.io/tweetnacl-js/">TweetNaCl.js</a> for ECMAScript.
+</p>
+<p>
+  Two keys and a <code>nonce</code> are required to decrypt a permit.
+  The first key is the <code>ephemeral</code> key.
+  The second key is the permit recipient’s <code>secretKey</code>.
+  Loop through the <code>encryptedPermits</code> until you find one that matches your keys:
+</p>
+<pre>
+for nonce, encryptedPermit of encryptedPermits
+  decryptedPermit = <a href="https://github.com/dchest/tweetnacl-js/blob/master/README.md#naclboxopenbox-nonce-theirpublickey-mysecretkey">NaCl.box.open</a>(encryptedPermit, nonce, ephemeral, secretKey)
+  if decryptedPermit
+    permit = <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">JSON.parse</a>(decryptedPermit)
+</pre>
+<p>
+  Here is the <code>permit</code> that was decrypted with Alice’s secret key:
+</p>
+<pre id="permit_with_encoded_file_info"></pre>
+<p>
+  <code>permit.senderID</code> identifies the person who created the miniLock file.
+</p>
+<p>
+  <code>permit.recipientID</code> identifies the recipient of the <code>permit</code>.
+  Readers can use this to verify the <code>recipientID</code> matches the miniLock ID bound to their <code>secretKey</code>.
+</p>
+<p>
+  <code>permit.fileInfo</code> consists of three members: <code>fileKey</code>, <code>fileNonce</code> and <code>fileHash</code>.
+  All are Base64 encoded strings.
+  Lets decode them to get a look at their bytes:
+<pre id="permit"></pre>
+<p>
+  <code>fileKey</code> is the 32-byte secret key for the ciphertext.
+  <code>fileNonce</code> is the 16-byte nonce for the ciphertext.
+  We will use these in a moment when we prepare to decrypt the ciphertext stream.
+</p>
+<p>
+
+</p>
+<p>
+  <code>fileHash</code> is a 32-byte <a href="https://blake2.net/">BLAKE2</a> hash digest of the original cleartext.
+  Use it to <a href="">verify the integrity of the decrypted bytes</a> when you have finished decrypting the ciphertext stream.
+</p>
+</section>
+
+<section id="ciphertext_section"><div class="margin_bytes"></div>
+<h1 class="invisible">Ciphertext<a id="ciphertext"></a></h1>
+<p>
+  The ciphertext in a miniLock file starts at the end of the header and it continues until the end of the file.
+  Calculate the ciphertext size with:
+</p>
+<pre>
+Take file size in bytes       + <span id="ciphertext_file_size_in_bytes"></span>
+Subtract magic bytes          - 8
+Subtract size of header bytes - 4
+Subtract header bytes         - <span id="ciphertext_header_size_in_bytes"></span>
+Ciphertext size in bytes      = <span id="ciphertext_size_in_bytes"></span>
+</pre>
+<p>
+  The ciphertext in this file starts at <code id="start_of_ciphertext">slot #</code> and ends at <code id="end_of_ciphertext">slot #</code>.
+
+<p>
+  The <code>fileKey</code> and <code>fileNonce</code> are required to decrypt the ciphertext.
+  <span class="ok">
+    Both were obtained from the <code>fileInfo</code> in <a href="#decrypt_a_permit"><span class="keyholder">Alice</span>’s file permit</a> that was decrypted from the header of the file.
+  </span>
+  <span class="failed">
+    Both are obtained from the <code>fileInfo</code> section of one of the <a href="encrypted_permits">encrypted permits</a> in the header of the file.
+    We don’t have the <code>fileKey</code> or the <code>fileNonce</code> in this case because <span class="keyholder">Bobby</span>’s keys didn’t unlock any permits.
+  </span>
+</p>
+<pre>
+fileKey:   <span id="ciphertext_file_key"></span>
+fileNonce: <span id="ciphertext_file_nonce"></span>
+</pre>
+<p>
+  Construct a stream decryptor that will process the ciphertext in 1MB chunks.
+</p>
+<pre>
+maxChunkSize = 1024 * 1024
+decryptor = NACL.stream.createDecryptor(fileKey, fileNonce, maxChunkSize)
+</pre>
+
+<h1>The First Chunk <em>152 more bytes in Version 2</em></h1>
+<p>
+  In version 2, the first chunk of ciphertext is reserved for the file <code>name</code>, <code>type</code> and <code>time</code> attributes.
+  The decrypted chunk is always <code>408</code> bytes long.
+  The encrypted chunk is <code>428</code> bytes because the encryption routine adds <code>20</code> bytes to each chunk.
+</p>
+<p>Read the first chunk from the file and decrypt it like this:</p>
+<pre>
+startOfCiphertext = <span id="start_of_ciphertext_for_first_chunk"></span>
+encryptedChunk = file.read(startOfCiphertext, startOfCiphertext+428)
+decryptedChunk = decryptor.decryptChunk(encryptedChunk, false)
+</pre>
+
+<h1>File Name</h1>
+<p>
+  The first <code>256</code> slots in the chunk are reserved for the <code>name</code> of the file.
+  To get it, slice off the first <code>256</code> decrypted bytes, filter out any <code>null</code> bytes and then encode the remaing bytes in UTF-8.
+  Don’t be surprised if the <code>name</code> is blank because that is a possibility.
+</p>
+<pre>
+sliceOfBytes   = decryptedChunk.slice(0, 256)
+filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
+name           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
+</pre>
+<p>
+<code id="decrypted_name"></code> is the decrypted <code>name</code> of this file.
+</p>
+
+<h1>Media Type <em>Introduced in Version 2</em></h1>
+<p>
+  The next <code>128</code> slots in the chunk are reserved to record the file <code>type</code>.
+  If present, <code>type</code> is expected to be a registered media type such as <code>text/plain</code> or <code>image/jpeg</code>.
+  It may also be blank.
+  The fixed size of 128 slots was informed by the media type <a href="http://tools.ietf.org/html/rfc6838#section-4.2">naming requirements defined in RFC6838</a>.
+  Slice, filter and then encode the bytes like so:
+</p>
+<pre>
+sliceOfBytes   = decryptedChunk.slice(256, 384)
+filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
+type           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
+</pre>
+<p>
+<code id="decrypted_type"></code> is the decrypted <code>type</code> of this file.
+</p>
+
+<h1>Encrypt Time <em>Introduced in Version 2</em></h1>
+<p>
+  The last <code>24</code> slots in the chunk are reserved to record the <code>time</code> when the file was encrypted.
+  <code>time</code> is expected to be a <a href="http://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations">ISO 8601 extended format timestamp</a> or a blank string.
+  The <code>time</code> parsing routine is the same as the <code>name</code> and <code>type</code> routines: slice, filter and then encode:
+</p>
+<pre>
+sliceOfBytes   = decryptedChunk.slice(384, 408)
+filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
+time           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
+</pre>
+<p>
+The <code>time</code> says this file was encrypted on <code id="decrypted_time"></code>.
+</p>
+
+<h1>Decrypting Each Remaining Slice of Ciphertext</h1>
+<p>
+  This is the same as version 1 and I am too lazy to explain it right now.
+</p>
+<p>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
+
+<h1>Verify the Integrity of the Bytes</h1>
+<p>
+  This is the same as version 1 and I am still too lazy.
+</p>
+<p>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
+
+</section>
+</article>
+
+<nav>
+  <div><a href="#introduction">Introduction</a></div>
+  <div><a href="#magic_bytes" class="link_to_magic_bytes">Magic Bytes</a></div>
+  <div><a href="#size_of_header" class="link_to_size_of_header">Size of Header</a></div>
+  <div><a href="#header" class="link_to_header">Header</a></div>
+  <div><a href="#ciphertext" class="link_to_ciphertext">Ciphertext</a></div>
+</nav>
+
+<div id="input_files">
+  <div class="unencrypted input file">
+    <fieldset>
+      <img src="input_file_icon.svg">
+      <textarea>miniLock is file encryption software that does more with less.</textarea>
+    </fieldset>
+    <input type="text" value="Simple.txt" name="unencrypted_name">
+  </div>
+  <img src="black_arrow.svg" class="first arrow">
+  <div class="encrypted input file">
+    <div id="encrypted_by">
+      <label>Author:</label>
+      <select id="encrypted_by_input">
+        <option>Alice</option>
+        <option>Bobby</option>
+        <option>Sarah</option>
+      </select>
+    </div>
+    <fieldset>
+      <img src="input_file_icon.svg">
+      <legend>Permits:</legend>
+      <div><label><input type="checkbox" name="minilock_ids" value="CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw" checked> Alice</label></div>
+      <div><label><input type="checkbox" name="minilock_ids" value="2CtUp8U3iGykxaqyEDkGJjgZTsEtzzYQCd8NVmLspM4i2b" checked> Bobby</label></div>
+      <div><label><input type="checkbox" name="minilock_ids" value="2H6TvBdYdWxy5z6KW6Ba5ZBb3B4XFAGVPsCHKmoYyJijCK"> Sarah</label></div>
+    </fieldset>
+    <input type="text" value="Secret.minilock">
+  </div>
+  <img src="black_arrow.svg" class="second arrow">
+</div>
+
+<div id="section_sizes_graphic" hidden>
+  <div class="magic"></div>
+  <div class="size_of_header"></div>
+  <div class="header"></div>
+  <div class="ciphertext"></div>
+</div>
+
+<div id="scrollgraph">
+  <div class="margin_top"></div>
+  <div class="introduction"></div>
+  <div class="magic"></div>
+  <div class="size_of_header"></div>
+  <div class="header"></div>
+  <div class="ciphertext"></div>
+  <div class="margin_bottom"></div>
+</div>
+
+</body>

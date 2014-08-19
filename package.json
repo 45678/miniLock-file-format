@@ -1,0 +1,17 @@
+{
+  "name": "miniLock-file-formats",
+  "version": "0.0.0",
+  "description": "A demonstration of miniLock file format version 2.",
+  "main": "2.html",
+  "dependencies": {
+    "async": "^0.9.0",
+    "coffee-script": "^1.7.1",
+    "miniLockLib": "^0.0.0",
+    "underscore": "^1.6.0",
+    "zepto": "^0.0.4"
+  },
+  "scripts": {
+    "start": "coffee --watch --compile --output compiled *.coffee"
+  },
+  "license": "Public Domain"
+}
