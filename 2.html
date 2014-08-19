@@ -224,7 +224,7 @@ decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryp
   The decrypted chunk is always <code>408</code> bytes long.
   The encrypted chunk is <code>428</code> bytes because the encryption routine adds <code>20</code> bytes.
 </p>
-<p>Read and decrypt the first chunk of the file like this:</p>
+<p>Read and decrypt the first chunk of ciphertext like this:</p>
 <pre>
 startOfCiphertext = <span id="start_of_ciphertext_for_first_chunk"></span>
 encryptedChunk = file.read(startOfCiphertext, startOfCiphertext+428)
