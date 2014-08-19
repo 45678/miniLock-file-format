@@ -31,8 +31,6 @@ $(document).ready (event) ->
         window.hashOffset = window.scrollY - $(location.hash).offset().top
       else
         window.hashOffset = 0
-      # console.info("window.scrollY", window.scrollY)
-      # console.info($('#magic_bytes').offset())
       extendArrow = if ($('#input_files').offset().top - $('#magic_bytes').offset().top) < -30 then yes else no
       $('#input_files > img.arrow').toggleClass("extended", extendArrow)
 
@@ -271,10 +269,7 @@ renderMarginBytes = (section, operation, start, end, done) ->
     tags = []
     if totalBytes > maxBytes
       snipHeight = ($(section).height()-2) % 30
-      console.info snipHeight
-
       stopAt = if snipHeight+10 > 30 then maxBytes-4 else maxBytes-3
-
       for byte, index in sliceOfBytes.subarray(0,stopAt)
         tags.push templates["margin_byte"](
           index: ((start + index) / 10000).toFixed(4).replace("0.", "")

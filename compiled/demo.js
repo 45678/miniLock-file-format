@@ -387,7 +387,6 @@
       tags = [];
       if (totalBytes > maxBytes) {
         snipHeight = ($(section).height() - 2) % 30;
-        console.info(snipHeight);
         stopAt = snipHeight + 10 > 30 ? maxBytes - 4 : maxBytes - 3;
         _ref = sliceOfBytes.subarray(0, stopAt);
         for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
