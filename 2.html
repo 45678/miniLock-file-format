@@ -150,7 +150,7 @@ for nonce, encryptedPermit of encryptedPermits
     permit = <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">JSON.parse</a>(decryptedPermit)
 </pre>
 <p>
-  Here is the <code>permit</code> that was decrypted with Alice’s secret key:
+  Here is the <code>permit</code> that was decrypted with <span class="keyholder">?</span>’s secret key:
 </p>
 <pre id="permit_with_encoded_file_info"></pre>
 <p>
@@ -198,7 +198,7 @@ Ciphertext size in bytes      = <span id="ciphertext_size_in_bytes"></span>
 <p>
   The <code>fileKey</code> and <code>fileNonce</code> are required to decrypt the ciphertext.
   <span class="ok">
-    Both were obtained from the <code>fileInfo</code> in <a href="#decrypt_a_permit"><span class="keyholder">Alice</span>’s file permit</a> that was decrypted from the header of the file.
+    Both were obtained from the <code>fileInfo</code> in <a href="#decrypt_a_permit"><span class="keyholder">?</span>’s file permit</a> that was decrypted from the header of the file.
   </span>
   <span class="failed">
     Both are obtained from the <code>fileInfo</code> section of one of the <a href="encrypted_permits">encrypted permits</a> in the header of the file.

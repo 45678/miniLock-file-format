@@ -174,6 +174,7 @@ renderSizeOfHeader = (sizeOfHeader) ->
 
 
 renderHeader = (decrypted, header) ->
+  $('#header_section span.keyholder').html(window.keys.name)
   $('#parsed_header').html templates["parsed_header"](
     version: header.version
     ephemeral: header.ephemeral
@@ -207,6 +208,7 @@ renderHeader = (decrypted, header) ->
 
 
 renderCiphertext = (operation, decrypted, header, sizeOfHeader) ->
+  $('#ciphertext_section span.keyholder').html(window.keys.name)
   if decrypted
     $('#ciphertext_section span.ok').show()
     $('#ciphertext_section span.failed').hide()
