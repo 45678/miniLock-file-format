@@ -216,6 +216,7 @@
       ephemeralKeyHTML: renderByteStream(miniLockLib.NACL.util.decodeBase64(header.ephemeral)),
       encryptedPermits: encryptedPermits
     }));
+    $('#introduction_minilock_filename').html($('div.encrypted.input.file input[type=text]').val());
     $('#decrypt_summary').toggleClass("empty", decrypted === void 0);
     $("#summary_of_decrypted_ciphertext").html(templates["summary_of_decrypted_ciphertext"]({
       name: decrypted != null ? decrypted.name : void 0,
