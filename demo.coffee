@@ -1,5 +1,5 @@
 Base58 = miniLockLib.Base58
-defer = (amount, f) -> setTimeout(f, amount)
+
 window.keys = characters.Alice
 
 $(document).ready (event) ->
@@ -35,11 +35,10 @@ $(document).on "mousedown", "a.secret_key", (event) ->
       console.error(error) if error
 
 $(document).ready (event) ->
-  $("#decrypt_keys").html ecoTemplates["decrypt_keys.html"](
+  $("#decrypt_keys").render
     aliceKeyHTML: renderByteStream characters.Alice.secretKey
     bobbyKeyHTML: renderByteStream characters.Bobby.secretKey
     sarahKeyHTML: renderByteStream characters.Sarah.secretKey
-  )
 
 setupBookmarks = ->
   bookmarks = $('section h1 a').toArray().reverse()
@@ -110,7 +109,6 @@ renderDecryptedFile = (operation, decrypted, header, sizeOfHeader) ->
   renderScrollGraph(operation, sizeOfHeader)
   renderSectionSizeGraphic(operation, sizeOfHeader)
 
-
 renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   if header?.decryptInfo
     encryptedPermits = for encodedNonce, encodedEncryptedPermit of header.decryptInfo
@@ -121,7 +119,7 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   else
     encryptedPermits = []
 
-  $('#unencrypted_summary').html ecoTemplates["unencrypted_summary.html"](
+  $('#unencrypted_summary').render
     miniLockFileName: $('div.encrypted.input.file input[type=text]').val()
     miniLockFileSize: operation.data.size
     magicBytesHTML: renderByteStream [109,105,110,105,76,111,99,107]
@@ -131,23 +129,20 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
     version: header.version
     ephemeralKeyHTML: renderByteStream miniLockLib.NACL.util.decodeBase64(header.ephemeral)
     encryptedPermits: encryptedPermits
-  )
   $('#introduction_minilock_filename').html($('div.encrypted.input.file input[type=text]').val())
   $('#decrypt_summary').toggleClass("empty", decrypted is undefined)
-  $("#summary_of_decrypted_ciphertext").html ecoTemplates["summary_of_decrypted_ciphertext.html"](
+  $("#summary_of_decrypted_ciphertext").render
     version: header.version
     name: decrypted?.name
     type: decrypted?.type
     time: decrypted?.time
     data: if decrypted? then $("div.unencrypted.input.file textarea").val() else undefined
-  )
-  $("#summary_of_decrypted_header").html ecoTemplates["summary_of_decrypted_header.html"](
+  $("#summary_of_decrypted_header").render
     authorName: (characters.find(decrypted.senderID).name if decrypted?)
     headerSenderID: decrypted?.senderID
     headerFileKeyHTML: (renderByteStream decrypted.fileKey if decrypted?)
     headerFileNonceHTML: (renderByteStream decrypted.fileNonce if decrypted?)
     headerFileHashHTML: (renderByteStream decrypted.fileHash if decrypted?)
-  )
 
 renderDecryptStatus = (operation, decrypted) ->
   $('#decrypt_status').toggleClass("ok", decrypted?)
@@ -177,20 +172,16 @@ renderHeader = (decrypted, header, sizeOfHeader) ->
   $('#header_section span.keyholder').html(window.keys.name)
   $('#end_of_header_bytes').html(12+sizeOfHeader)
   $('#end_slot_of_header_bytes').html("slot #{12+sizeOfHeader}")
-  $('#parsed_header').html ecoTemplates["parsed_header.html"](
+  $('#parsed_header').render
     version: header.version
     ephemeral: header.ephemeral
     decryptInfo: JSON.stringify(header.decryptInfo, undefined, 2)
-  )
   ephemeralKey = miniLockLib.NACL.util.decodeBase64(header.ephemeral)
   ephemeralArray = (byte for byte in ephemeralKey)
   $('#decoded_ephemeral_key').html(renderByteStream ephemeralArray)
   $('#encoded_ephemeral_key').html(JSON.stringify(header.ephemeral))
-
   $("#number_of_permits").html(Object.keys(header.decryptInfo).length)
-
   # $('#unique_nonce').html(renderByteStream uniqueNonce)
-
   permitForRender = """
     senderID:    #{if decrypted? then '"'+decrypted.senderID+'"' else ''}
     recipientID: #{if decrypted? then '"'+decrypted.recipientID+'"' else ''}
@@ -200,7 +191,6 @@ renderHeader = (decrypted, header, sizeOfHeader) ->
       fileHash:  #{if decrypted? then '"'+miniLockLib.NACL.util.encodeBase64(decrypted.fileHash)+'"' else ''}
   """
   $('#permit_with_encoded_file_info').html(permitForRender)
-
   permitForRender = """
     fileKey:   #{if decrypted? then renderByteStream decrypted.fileKey else ''}
     fileNonce: #{if decrypted? then renderByteStream decrypted.fileNonce else ''}
@@ -318,3 +308,10 @@ numberToByteArray = (n) ->
     byteArray[index] = n & 255
     n = n >> 8
   byteArray
+
+defer = (amount, f) ->
+  setTimeout(f, amount)
+
+$.fn.render = (params) ->
+  template = $(this).attr('id')+".html"
+  $(this).html ecoTemplates[template](params)

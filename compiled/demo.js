@@ -3,10 +3,6 @@
 
   Base58 = miniLockLib.Base58;
 
-  defer = function(amount, f) {
-    return setTimeout(f, amount);
-  };
-
   window.keys = characters.Alice;
 
   $(document).ready(function(event) {
@@ -62,11 +58,11 @@
   });
 
   $(document).ready(function(event) {
-    return $("#decrypt_keys").html(ecoTemplates["decrypt_keys.html"]({
+    return $("#decrypt_keys").render({
       aliceKeyHTML: renderByteStream(characters.Alice.secretKey),
       bobbyKeyHTML: renderByteStream(characters.Bobby.secretKey),
       sarahKeyHTML: renderByteStream(characters.Sarah.secretKey)
-    }));
+    });
   });
 
   setupBookmarks = function() {
@@ -189,7 +185,7 @@
     } else {
       encryptedPermits = [];
     }
-    $('#unencrypted_summary').html(ecoTemplates["unencrypted_summary.html"]({
+    $('#unencrypted_summary').render({
       miniLockFileName: $('div.encrypted.input.file input[type=text]').val(),
       miniLockFileSize: operation.data.size,
       magicBytesHTML: renderByteStream([109, 105, 110, 105, 76, 111, 99, 107]),
@@ -199,23 +195,23 @@
       version: header.version,
       ephemeralKeyHTML: renderByteStream(miniLockLib.NACL.util.decodeBase64(header.ephemeral)),
       encryptedPermits: encryptedPermits
-    }));
+    });
     $('#introduction_minilock_filename').html($('div.encrypted.input.file input[type=text]').val());
     $('#decrypt_summary').toggleClass("empty", decrypted === void 0);
-    $("#summary_of_decrypted_ciphertext").html(ecoTemplates["summary_of_decrypted_ciphertext.html"]({
+    $("#summary_of_decrypted_ciphertext").render({
       version: header.version,
       name: decrypted != null ? decrypted.name : void 0,
       type: decrypted != null ? decrypted.type : void 0,
       time: decrypted != null ? decrypted.time : void 0,
       data: decrypted != null ? $("div.unencrypted.input.file textarea").val() : void 0
-    }));
-    return $("#summary_of_decrypted_header").html(ecoTemplates["summary_of_decrypted_header.html"]({
+    });
+    return $("#summary_of_decrypted_header").render({
       authorName: (decrypted != null ? characters.find(decrypted.senderID).name : void 0),
       headerSenderID: decrypted != null ? decrypted.senderID : void 0,
       headerFileKeyHTML: (decrypted != null ? renderByteStream(decrypted.fileKey) : void 0),
       headerFileNonceHTML: (decrypted != null ? renderByteStream(decrypted.fileNonce) : void 0),
       headerFileHashHTML: (decrypted != null ? renderByteStream(decrypted.fileHash) : void 0)
-    }));
+    });
   };
 
   renderDecryptStatus = function(operation, decrypted) {
@@ -264,11 +260,11 @@
     $('#header_section span.keyholder').html(window.keys.name);
     $('#end_of_header_bytes').html(12 + sizeOfHeader);
     $('#end_slot_of_header_bytes').html("slot " + (12 + sizeOfHeader));
-    $('#parsed_header').html(ecoTemplates["parsed_header.html"]({
+    $('#parsed_header').render({
       version: header.version,
       ephemeral: header.ephemeral,
       decryptInfo: JSON.stringify(header.decryptInfo, void 0, 2)
-    }));
+    });
     ephemeralKey = miniLockLib.NACL.util.decodeBase64(header.ephemeral);
     ephemeralArray = (function() {
       var _i, _len, _results;
@@ -456,6 +452,16 @@
       n = n >> 8;
     }
     return byteArray;
+  };
+
+  defer = function(amount, f) {
+    return setTimeout(f, amount);
+  };
+
+  $.fn.render = function(params) {
+    var template;
+    template = $(this).attr('id') + ".html";
+    return $(this).html(ecoTemplates[template](params));
   };
 
 }).call(this);
