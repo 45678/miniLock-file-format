@@ -50,7 +50,7 @@ body.ready #discuss,
 body.ready #introduction_section,
 body.ready article.blob {
   opacity: 1;
-  transition: opacity 300ms linear 0ms;
+  transition: opacity 300ms linear 300ms;
 }
 
 /* -------- -------- -------- -------- */
@@ -361,7 +361,7 @@ div.file.input input[type=text] {
 }
 #input_files > img.arrow.second.extended {
   left: 200px;
-  transition: left 150ms ease-out 150ms;
+  transition: left 150ms ease-out 300ms;
 }
 
 
