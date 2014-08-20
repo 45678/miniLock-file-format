@@ -10,6 +10,6 @@ render = (name, params={}) ->
   params.render = render
   eco.render template, params
 
-page = readFileSync "#{templatesFolder}/#{process.argv[2]}", "utf-8"
+page = readFileSync "#{process.argv[2]}", "utf-8"
 html = eco.render page, {"render":render}
 process.stdout.write(html)
