@@ -35,7 +35,7 @@ $(document).on "mousedown", "a.secret_key", (event) ->
       console.error(error) if error
 
 $(document).ready (event) ->
-  $("#decrypt_keys").html templates["decrypt_keys"](
+  $("#decrypt_keys").html ecoTemplates["decrypt_keys.html"](
     aliceKeyHTML: renderByteStream characters.Alice.secretKey
     bobbyKeyHTML: renderByteStream characters.Bobby.secretKey
     sarahKeyHTML: renderByteStream characters.Sarah.secretKey

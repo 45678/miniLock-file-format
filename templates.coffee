@@ -13,12 +13,6 @@ Decrypt Info:    <span class="punctuation">{</span><% if (encryptedPermits.lengt
 <% if (encryptedPermits.length !== 0) { %><span class="punctuation">}</span><% }; %></pre>
 """
 
-templates["decrypt_keys"] = _.template """
-<div class="named_key"><a class="secret_key selected" data-name="Alice"><label>Alice</label> <%= aliceKeyHTML %>-byte secret key</a></div>
-<div class="named_key"><a class="secret_key" data-name="Bobby"><label>Bobby</label> <%= bobbyKeyHTML %>-byte secret key</a></div>
-<div class="named_key"><a class="secret_key" data-name="Sarah"><label>Sarah</label> <%= sarahKeyHTML %>-byte secret key</a></div>
-"""
-
 templates["summary_of_decrypted_ciphertext"] = _.template """
   Blob Data:     <%- data %>
   File Name:     <%- name %>

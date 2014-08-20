@@ -62,7 +62,7 @@
   });
 
   $(document).ready(function(event) {
-    return $("#decrypt_keys").html(templates["decrypt_keys"]({
+    return $("#decrypt_keys").html(ecoTemplates["decrypt_keys.html"]({
       aliceKeyHTML: renderByteStream(characters.Alice.secretKey),
       bobbyKeyHTML: renderByteStream(characters.Bobby.secretKey),
       sarahKeyHTML: renderByteStream(characters.Sarah.secretKey)
