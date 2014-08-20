@@ -9,6 +9,7 @@ COMPILED_TEMPLATES = \
 	compiled/parsed_header.html.js \
 	compiled/unencrypted_summary.html.js \
 	compiled/summary_of_decrypted_ciphertext.html.js \
+	compiled/summary_of_decrypted_header.html.js \
 
 default: 1.html 2.html
 

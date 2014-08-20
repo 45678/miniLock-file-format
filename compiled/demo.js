@@ -209,7 +209,7 @@
       time: decrypted != null ? decrypted.time : void 0,
       data: decrypted != null ? $("div.unencrypted.input.file textarea").val() : void 0
     }));
-    return $("#summary_of_decrypted_header").html(templates["summary_of_decrypted_header"]({
+    return $("#summary_of_decrypted_header").html(ecoTemplates["summary_of_decrypted_header.html"]({
       authorName: (decrypted != null ? characters.find(decrypted.senderID).name : void 0),
       headerSenderID: decrypted != null ? decrypted.senderID : void 0,
       headerFileKeyHTML: (decrypted != null ? renderByteStream(decrypted.fileKey) : void 0),
@@ -222,14 +222,20 @@
     var template;
     $('#decrypt_status').toggleClass("ok", decrypted != null);
     $('#decrypt_status').toggleClass("failed", decrypted == null);
-    template = decrypted != null ? "decrypt_status_ok" : "decrypt_status_failed";
-    $('#decrypt_status').append(templates[template]({
-      name: operation.keys.name
-    }));
+    template = decrypted != null ? renderDecryptStatus.ok : renderDecryptStatus.failed;
+    $('#decrypt_status').append(template(operation.keys.name));
     $('#decrypt_status > div:first-child').addClass("outgoing");
     return defer(250, function() {
       return $('#decrypt_status > div:first-child').remove();
     });
+  };
+
+  renderDecryptStatus.ok = function(name) {
+    return "<div><em>Ah-ha!</em> " + name + "’s secret key unlocks the file! Look see:</div>";
+  };
+
+  renderDecryptStatus.failed = function(name) {
+    return "<div><em>Oh-no!</em> " + name + "’s secret key doesn’t fit. There is nothing to see:</div>";
   };
 
   renderMagicBytes = function(operation) {

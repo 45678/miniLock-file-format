@@ -141,7 +141,7 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
     time: decrypted?.time
     data: if decrypted? then $("div.unencrypted.input.file textarea").val() else undefined
   )
-  $("#summary_of_decrypted_header").html templates["summary_of_decrypted_header"](
+  $("#summary_of_decrypted_header").html ecoTemplates["summary_of_decrypted_header.html"](
     authorName: (characters.find(decrypted.senderID).name if decrypted?)
     headerSenderID: decrypted?.senderID
     headerFileKeyHTML: (renderByteStream decrypted.fileKey if decrypted?)
@@ -152,10 +152,16 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
 renderDecryptStatus = (operation, decrypted) ->
   $('#decrypt_status').toggleClass("ok", decrypted?)
   $('#decrypt_status').toggleClass("failed", not decrypted?)
-  template = if decrypted? then "decrypt_status_ok" else "decrypt_status_failed"
-  $('#decrypt_status').append templates[template](name: operation.keys.name)
+  template = if decrypted? then renderDecryptStatus.ok else renderDecryptStatus.failed
+  $('#decrypt_status').append template(operation.keys.name)
   $('#decrypt_status > div:first-child').addClass("outgoing")
   defer 250, -> $('#decrypt_status > div:first-child').remove()
+
+renderDecryptStatus.ok = (name) ->
+  """<div><em>Ah-ha!</em> #{name}’s secret key unlocks the file! Look see:</div>"""
+
+renderDecryptStatus.failed = (name) ->
+  """<div><em>Oh-no!</em> #{name}’s secret key doesn’t fit. There is nothing to see:</div>"""
 
 renderMagicBytes = (operation) ->
   bytesAsArray = [109,105,110,105,76,111,99,107]
@@ -164,10 +170,8 @@ renderMagicBytes = (operation) ->
   bytesAsBase16 = ("0x#{byte.toString(16)}" for byte in bytesAsArray)
   $('#magic_bytes_in_base16').html("["+bytesAsBase16.join(",")+"]")
 
-
 renderSizeOfHeader = (sizeOfHeader) ->
   $('#size_of_header_bytes').html(sizeOfHeader)
-
 
 renderHeader = (decrypted, header, sizeOfHeader) ->
   $('#header_section span.keyholder').html(window.keys.name)
