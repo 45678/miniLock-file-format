@@ -10,11 +10,6 @@
   window.keys = characters.Alice;
 
   $(document).ready(function(event) {
-    $("#decrypt_keys").html(templates["decrypt_keys"]({
-      aliceKeyHTML: renderByteStream(characters.Alice.secretKey),
-      bobbyKeyHTML: renderByteStream(characters.Bobby.secretKey),
-      sarahKeyHTML: renderByteStream(characters.Sarah.secretKey)
-    }));
     return makeMiniLockFileAndDecrypt(function(error) {
       if (error) {
         return console.error(error);
@@ -64,6 +59,14 @@
         }
       });
     }
+  });
+
+  $(document).ready(function(event) {
+    return $("#decrypt_keys").html(templates["decrypt_keys"]({
+      aliceKeyHTML: renderByteStream(characters.Alice.secretKey),
+      bobbyKeyHTML: renderByteStream(characters.Bobby.secretKey),
+      sarahKeyHTML: renderByteStream(characters.Sarah.secretKey)
+    }));
   });
 
   setupBookmarks = function() {

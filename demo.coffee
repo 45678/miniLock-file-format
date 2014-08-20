@@ -2,13 +2,7 @@ Base58 = miniLockLib.Base58
 defer = (amount, f) -> setTimeout(f, amount)
 window.keys = characters.Alice
 
-
 $(document).ready (event) ->
-  $("#decrypt_keys").html templates["decrypt_keys"](
-    aliceKeyHTML: renderByteStream characters.Alice.secretKey
-    bobbyKeyHTML: renderByteStream characters.Bobby.secretKey
-    sarahKeyHTML: renderByteStream characters.Sarah.secretKey
-  )
   makeMiniLockFileAndDecrypt (error) ->
     if error
       console.error(error)
@@ -40,6 +34,13 @@ $(document).on "mousedown", "a.secret_key", (event) ->
       $(event.currentTarget).toggleClass("jams", error?)
       console.error(error) if error
 
+$(document).ready (event) ->
+  $("#decrypt_keys").html templates["decrypt_keys"](
+    aliceKeyHTML: renderByteStream characters.Alice.secretKey
+    bobbyKeyHTML: renderByteStream characters.Bobby.secretKey
+    sarahKeyHTML: renderByteStream characters.Sarah.secretKey
+  )
+
 setupBookmarks = ->
   bookmarks = $('section h1 a').toArray().reverse()
   $(document).on "scroll", (event) ->
@@ -70,7 +71,6 @@ makeMiniLockFileAndDecrypt.debounced = _.debounce(makeMiniLockFileAndDecrypt, 50
 makeMiniLockFile = (callback) ->
   unencryptedFileInput = '#input_files div.unencrypted.file.input'
   encryptedFileInput   = '#input_files div.encrypted.file.input'
-
   miniLockLib.encrypt
     version: Number $("#{encryptedFileInput} input[name=version]").val()
     data: new Blob([$("#{unencryptedFileInput} textarea").val()])
@@ -97,8 +97,6 @@ decryptMiniLockFile = (file, keys, callback) ->
     keys: keys
   operation.start (error, decrypted, header, sizeOfHeader) ->
     renderDecryptedFile(operation, decrypted, header, sizeOfHeader)
-    # if location.hash
-    #   window.scroll(0, $(location.hash).offset().top + offset)
     renderMarginBytesForEachSection operation, sizeOfHeader, ->
       callback(error)
 
