@@ -13,10 +13,9 @@ $(document).ready (event) ->
     if error
       console.error(error)
     else
-      setupBookmarks()
       $(document.body).removeClass("loading").addClass("ready")
       $(location.hash).get(0).scrollIntoView() if location.hash
-
+      setupBookmarks()
 
 $(document).on "scroll", ->
   $('#input_files > img.arrow').toggleClass("extended", $('#input_files').offset().top - $('#magic_bytes').offset().top < -30)
@@ -42,7 +41,7 @@ $(document).on "mousedown", "a.secret_key", (event) ->
 
 setupBookmarks = ->
   bookmarks = $('section h1 a').toArray().reverse()
-  $(document).on "scroll", ->
+  $(document).on "scroll", (event) ->
     filtered = bookmarks.filter (bookmark) -> window.scrollY >= $(bookmark).offset().top
     bookmark = filtered[0]
     bookmarkHash = (if bookmark then "#"+bookmark.id else "")
@@ -97,8 +96,8 @@ decryptMiniLockFile = (file, keys, callback) ->
     keys: keys
   operation.start (error, decrypted, header, sizeOfHeader) ->
     renderDecryptedFile(operation, decrypted, header, sizeOfHeader)
-    if location.hash
-      window.scroll(0, $(location.hash).offset().top + offset)
+    # if location.hash
+    #   window.scroll(0, $(location.hash).offset().top + offset)
     renderMarginBytesForEachSection operation, sizeOfHeader, ->
       callback(error)
 

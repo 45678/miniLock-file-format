@@ -19,11 +19,11 @@
       if (error) {
         return console.error(error);
       } else {
-        setupBookmarks();
         $(document.body).removeClass("loading").addClass("ready");
         if (location.hash) {
-          return $(location.hash).get(0).scrollIntoView();
+          $(location.hash).get(0).scrollIntoView();
         }
+        return setupBookmarks();
       }
     });
   });
@@ -68,7 +68,7 @@
   setupBookmarks = function() {
     var bookmarks;
     bookmarks = $('section h1 a').toArray().reverse();
-    return $(document).on("scroll", function() {
+    return $(document).on("scroll", function(event) {
       var baseUrl, bookmark, bookmarkHash, filtered;
       filtered = bookmarks.filter(function(bookmark) {
         return window.scrollY >= $(bookmark).offset().top;
@@ -147,9 +147,6 @@
     });
     return operation.start(function(error, decrypted, header, sizeOfHeader) {
       renderDecryptedFile(operation, decrypted, header, sizeOfHeader);
-      if (location.hash) {
-        window.scroll(0, $(location.hash).offset().top + offset);
-      }
       return renderMarginBytesForEachSection(operation, sizeOfHeader, function() {
         return callback(error);
       });

@@ -28,7 +28,7 @@ body #introduction {
 }
 
 body.loading nav > div {
-  opacity: 0;
+  opacity: 0.33;
 }
 body.ready nav > div {
   opacity: 1;
@@ -40,16 +40,10 @@ body.ready nav > div:nth-child(3) { transition-delay: 150ms; }
 body.ready nav > div:nth-child(4) { transition-delay: 200ms; }
 body.ready nav > div:nth-child(5) { transition-delay: 250ms; }
 
-
-body.loading #title,
 body.loading #discuss,
 body.loading #introduction_section,
 body.loading article.blob {
   opacity: 0;
-}
-
-body.ready #title {
-  opacity: 1;
 }
 
 body.ready #discuss,
