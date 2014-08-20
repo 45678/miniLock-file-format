@@ -1,7 +1,6 @@
 SCRIPTS = \
 	compiled/characters.js \
 	compiled/demo.js \
-	compiled/templates.js \
 
 COMPILED_TEMPLATES = \
 	compiled/decrypt_keys.html.js \
