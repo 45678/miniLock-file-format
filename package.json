@@ -13,7 +13,7 @@
     "zepto": "^0.0.4"
   },
   "scripts": {
-    "start": "wr make *.coffee templates/*.html"
+    "start": "make clean && make && wr make *.coffee templates/*.html"
   },
   "license": "Public Domain"
 }

@@ -40,13 +40,18 @@ body.ready nav > div:nth-child(3) { transition-delay: 150ms; }
 body.ready nav > div:nth-child(4) { transition-delay: 200ms; }
 body.ready nav > div:nth-child(5) { transition-delay: 250ms; }
 
+
 body.loading #title,
 body.loading #discuss,
 body.loading #introduction_section,
 body.loading article.blob {
   opacity: 0;
 }
-body.ready #title,
+
+body.ready #title {
+  opacity: 1;
+}
+
 body.ready #discuss,
 body.ready #introduction_section,
 body.ready article.blob {
@@ -57,7 +62,7 @@ body.ready article.blob {
 /* -------- -------- -------- -------- */
 
 #title {
-  margin: 60px 0 20px;
+  margin: 60px 500px 20px 0px;
 }
 
 #title h1 {
@@ -73,16 +78,78 @@ body.ready article.blob {
   top: 0px;
   height: 120px;
 }
-#discuss {
-  margin: 0px 0 40px;
+
+#title .versions {
+
+  overflow: hidden;
+  height: 60px;
+  width: 40ex;
+  padding: 0;
+  margin: 0 0 0 96px;
+}
+#title .versions > div {
+  display: inline-block;
+  padding-left: 10px;
+  /*outline: 1px solid white;*/
+}
+
+body.v1.loading #title div.draft.version {
+  margin-left: 0;
+  opacity: 1;
+  transition: none;
+}
+body.v1.ready #title div.draft.version {
+  margin-left: 8ex;
+  opacity: 0;
+  transition: margin-left 300ms ease-in, opacity 250ms ease-in;
+}
+body.v1.ready #title:hover div.draft.version {
+  margin-left: 0;
+  opacity: 1;
+  transition: margin-left 300ms ease-out 150ms, opacity 250ms ease-out 150ms;
 }
 
 
+body.v2.loading #title .versions > div:first-child {
+  margin-left: 0;
+  transition: none;
+}
+body.v2.ready #title .versions > div:first-child {
+  margin-left: -15ex;
+  transition: margin-left 300ms ease-out;
+}
+body.v2.ready #title:hover .versions > div:first-child {
+  margin-left: 0;
+  transition: margin-left 300ms ease-out 150ms;
+}
+
+#title .version a {
+  text-decoration: none;
+}
+#title .version a:link {
+  text-decoration: underline;
+}
+#title .version a label {
+  text-decoration: none;
+}
+
+/* -------- -------- -------- -------- */
+
+#discuss {
+  position: absolute;
+  margin: 0;
+}
 #discuss a {
   color: hsl(0, 0%, 50%);
 }
 #discuss a:visited {
   color: hsl(300, 100%, 25%);
+}
+
+/* -------- -------- -------- -------- */
+
+#introduction_section {
+  margin-top: 90px;
 }
 
 /* -------- -------- -------- -------- */

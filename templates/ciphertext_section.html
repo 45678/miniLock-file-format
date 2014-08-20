@@ -1,0 +1,51 @@
+
+<section id="ciphertext_section"><div class="margin_bytes"></div>
+<h1 class="invisible">Ciphertext<a id="ciphertext"></a></h1>
+<p>
+  The ciphertext in a miniLock file starts at the end of the header and it continues until the end of the file.
+  Calculate the ciphertext size with:
+</p>
+<pre>
+Take file size in bytes       + <span id="ciphertext_file_size_in_bytes"></span>
+Subtract magic bytes          - 8
+Subtract size of header bytes - 4
+Subtract header bytes         - <span id="ciphertext_header_size_in_bytes"></span>
+Ciphertext size in bytes      = <span id="ciphertext_size_in_bytes"></span>
+</pre>
+<p>
+  The ciphertext in this file starts at <code id="start_of_ciphertext">slot #</code> and ends at <code id="end_of_ciphertext">slot #</code>.
+</p>
+<p>
+  miniLock relies on a <a href="https://github.com/dchest/nacl-stream-js#nacl-stream-streaming-encryption-based-on-tweetnacljs">streaming encryption scheme based on TweetNaCl</a> to encrypt and decrypt its ciphertext.
+  <span class="ok">
+    The <code>fileKey</code> and <code>fileNonce</code> from <a href="#decrypt_a_permit"><span class="keyholder">?</span>’s permit</a> are required to setup the decryption scheme:
+  </span>
+  <span class="failed">
+    We don’t have the <code>fileKey</code> or the <code>fileNonce</code> because <span class="keyholder">?</span>’s keys didn’t unlock any permits.
+  </span>
+</p>
+<pre>
+fileKey:   <span id="ciphertext_file_key"></span>
+fileNonce: <span id="ciphertext_file_nonce"></span>
+</pre>
+<p>
+  With these keys on hand we are ready to construct a stream decryptor.
+  Configure it to process the ciphertext with a maximum chunk size of 1MB:
+</p>
+<pre>
+maxChunkSize = 1024 * 1024
+decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryptorkey-nonce-maxchunklength">NaCl.stream.createDecryptor</a>(fileKey, fileNonce, maxChunkSize)
+</pre>
+
+<%- @render "the_first_chunk_in_version_#{@version}" %>
+<%- @render "file_name" %>
+<%- @render "media_type" if @version is 2 %>
+<%- @render "encrypt_time" if @version is 2 %>
+<%- @render "decrypt_data_chunks" if @version is 2 %>
+
+<h1>Verify the Integrity of the Bytes</h1>
+<p>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
+
+</section>

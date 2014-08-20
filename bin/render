@@ -1,0 +1,15 @@
+#!/usr/bin/env coffee
+
+eco = require "eco"
+{readFileSync} = require "fs"
+
+templatesFolder = __dirname.split("/")[0..-2].join("/") + "/templates"
+
+render = (name, params={}) ->
+  template = readFileSync "#{templatesFolder}/#{name}.html", "utf-8"
+  params.render = render
+  eco.render template, params
+
+page = readFileSync "#{templatesFolder}/#{process.argv[2]}", "utf-8"
+html = eco.render page, {"render":render}
+process.stdout.write(html)

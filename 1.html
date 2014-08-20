@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <title>miniLock File Format Version 2</title>
+  <title>miniLock File Format Version 1</title>
   <link rel="stylesheet" href="stylesheet.css" charset="utf-8">
   <script src="node_modules/miniLockLib/scripts/miniLockLib.js" charset="utf-8"></script>
   <script src="node_modules/zepto/zepto.min.js" charset="utf-8"></script>
@@ -12,26 +12,23 @@
   <script src="compiled/summary_of_decrypted_ciphertext.html.js" charset="utf-8"></script>
   <script src="compiled/demo.js" charset="utf-8"></script>
 </head>
-<body class="v2 loading"><a id="introduction"></a>
+<body class="v1 loading"><a id="introduction"></a>
 
 <div id="title">
   <h1><strong>miniLock</strong></h1>
   <h1>File Format</h1>
   <h1 class="versions">
     <div class="current version">
-      <b><a href="1.html">Version 1</a></b>
+      <b><a>Version 1</a></b>
       <br><label>Current</label>
     </div>
     <div class="draft version">
-      <b><a>Version 2</a></b>
+      <b><a href="2.html">Version 2</a></b>
       <br><label>Draft</label>
     </div>
   </h1>
   <img id="minilock_file_icon" src="minilock_file_icon_black.svg">
 </div>
-<p id="discuss">
-  <a href="https://github.com/kaepora/miniLock/pull/136">Discuss this proposal at miniLock HQ</a>
-</p>
 
 <section id="introduction_section">
   <p>
@@ -104,7 +101,7 @@ header = <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refere
 </p>
 <p>
   <code>ephemeral</code> is a Base64 encoded 32-byte public key.
-  It is one of two keys that are required to <a href="#decrypt_a_permit">decrypt a permit</a>.
+  It is one of twp keys that is required to <a href="#decrypt_a_permit">decrypt a permit</a>.
 </p>
 <p>
   <code>decryptInfo</code> contains a <code>nonce:encryptedPermit</code> pair for each recipient.
@@ -230,11 +227,12 @@ maxChunkSize = 1024 * 1024
 decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryptorkey-nonce-maxchunklength">NaCl.stream.createDecryptor</a>(fileKey, fileNonce, maxChunkSize)
 </pre>
 
-<h1>The First Chunk <em>152-bytes longer in Version 2</em><a id="the_first_chunk"></a></h1>
+
+<h1>The First Chunk<a id="the_first_chunk"></a></h1>
 <p>
-  In version 2, the first chunk of ciphertext is reserved for the file <code>name</code>, <code>type</code> and <code>time</code> attributes.
-  The decrypted chunk is always <code>408</code> bytes long.
-  The encrypted chunk is <code>428</code> bytes because the encryption scheme adds <code>20</code> bytes.
+  In version 1, the first chunk of ciphertext is reserved for the file <code>name</code> attribute.
+  The decrypted chunk is always <code>256</code> bytes long.
+  The encrypted chunk is <code>276</code> bytes because the encryption scheme adds <code>20</code> bytes.
 </p>
 <p>Read and decrypt the first chunk of ciphertext like this:</p>
 <pre>
@@ -258,60 +256,8 @@ name           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeu
 <code id="decrypted_name"></code> is the decrypted <code>name</code> of this file.
 </p>
 
-<h1>Media Type <em>Introduced in Version 2</em><a id="media_type"></a></h1>
-<p>
-  The next <code>128</code> slots in the chunk are reserved to record the file <code>type</code>.
-  If present, <code>type</code> is expected to be a registered media type such as <code>text/plain</code> or <code>image/jpeg</code>.
-  It may also be blank.
-  The fixed size of <code>128</code> slots was informed by the media type <a href="http://tools.ietf.org/html/rfc6838#section-4.2">naming requirements defined in RFC6838</a>.
-  Slice, filter and then encode the bytes like so:
-</p>
-<pre>
-sliceOfBytes   = decryptedChunk.slice(256, 384)
-filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
-type           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
-</pre>
-<p>
-<code id="decrypted_type"></code> is the decrypted <code>type</code> of this file.
-</p>
 
-<h1>Encrypt Time <em>Introduced in Version 2</em><a id="encrypt_time"></a></h1>
-<p>
-  The last <code>24</code> slots in the chunk are reserved to record the <code>time</code> when the file was encrypted.
-  <code>time</code> is expected to be a <a href="http://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations">ISO 8601 extended format timestamp</a> or a blank string.
-  The <code>time</code> parsing routine is the same as the <code>name</code> and <code>type</code> routines: slice, filter and then encode:
-</p>
-<pre>
-sliceOfBytes   = decryptedChunk.slice(384, 408)
-filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
-time           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
-</pre>
-<p>
-The <code>time</code> says this file was encrypted on <code id="decrypted_time"></code>.
-</p>
 
-<h1>Decrypt Data Chunks<a id="decrypt_data_chunks"></a></h1>
-<p>
-  The ciphertext chunks after <a href="#the_first_chunk">the first chunk</a> contain the binary data of <code>Simple.txt</code>.
-  Each chunk of data is decrypted one at a time in squential order and reassembled into a stream of cleartext.
-</p>
-<p>
-  The encrypted data chunks in this file start at <code id="start_position_of_data_chunks">428</code>
-  and end at <code id="end_position_of_data_chunks">slot ?</code>.
-</p>
-
-<pre>
-startOfChunk   = 1620
-endOfChunk     = Math.min(startOfChunk + maxChunkSize + 20, file.size)
-isLastChunk    = endOfChunk is file.size
-encryptedChunk = file.read(startOfChunk, endOfChunk)
-decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, isLastChunk)
-if decryptedChunk
-  hash.update(decryptedChunk)
-  decrypted.push(decryptedChunk)
-if isLastChunk is false
-  # start again from endOfChunk
-</pre>
 
 
 <h1>Verify the Integrity of the Bytes</h1>
@@ -357,7 +303,7 @@ if isLastChunk is false
       <div><label><input type="checkbox" name="minilock_ids" value="2H6TvBdYdWxy5z6KW6Ba5ZBb3B4XFAGVPsCHKmoYyJijCK"> Sarah</label></div>
     </fieldset>
     <input type="text" name="name" value="Secret.minilock">
-    <input type="hidden" name="version" value="2">
+    <input type="hidden" name="version" value="1">
   </div>
   <img src="black_arrow.svg" class="second arrow">
 </div>

@@ -10,34 +10,16 @@ $(document).ready (event) ->
     sarahKeyHTML: renderByteStream characters.Sarah.secretKey
   )
   makeMiniLockFileAndDecrypt (error) ->
-    console.error(error) if error
-    window.scroll(1, 1)
-    window.scroll(0, 0)
-    $(location.hash).get(0).scrollIntoView() if location.hash
-    $(document.body).removeClass("loading").addClass("ready")
-    $(document).on "scroll", ->
-      hash = switch
-        when window.scrollY >= $('#decrypt_data_chunks').offset().top then '#decrypt_data_chunks'
-        when window.scrollY >= $('#encrypt_time').offset().top then '#encrypt_time'
-        when window.scrollY >= $('#media_type').offset().top then '#media_type'
-        when window.scrollY >= $('#file_name').offset().top then '#file_name'
-        when window.scrollY >= $('#the_first_chunk').offset().top then '#the_first_chunk'
-        when window.scrollY >= $('#ciphertext').offset().top then '#ciphertext'
-        when window.scrollY >= $('#decrypt_a_permit').offset().top then '#decrypt_a_permit'
-        when window.scrollY >= $('#decoding_the_header').offset().top then '#decoding_the_header'
-        when window.scrollY >= $('#header').offset().top then '#header'
-        when window.scrollY >= $('#size_of_header').offset().top then '#size_of_header'
-        when window.scrollY >= $('#magic_bytes').offset().top then '#magic_bytes'
-        else ""
-      if location.hash isnt hash
-        [baseUrl] = location.toString().split("#")
-        history.replaceState({}, "", "#{baseUrl}#{hash}")
-      if location.hash
-        window.hashOffset = window.scrollY - $(location.hash).offset().top
-      else
-        window.hashOffset = 0
-      extendArrow = if ($('#input_files').offset().top - $('#magic_bytes').offset().top) < -30 then yes else no
-      $('#input_files > img.arrow').toggleClass("extended", extendArrow)
+    if error
+      console.error(error)
+    else
+      setupBookmarks()
+      $(document.body).removeClass("loading").addClass("ready")
+      $(location.hash).get(0).scrollIntoView() if location.hash
+
+
+$(document).on "scroll", ->
+  $('#input_files > img.arrow').toggleClass("extended", $('#input_files').offset().top - $('#magic_bytes').offset().top < -30)
 
 $(document).on "input", "#input_files textarea, #input_files input[type=text]", (event) ->
   makeMiniLockFileAndDecrypt.debounced (error) ->
@@ -58,6 +40,19 @@ $(document).on "mousedown", "a.secret_key", (event) ->
       $(event.currentTarget).toggleClass("jams", error?)
       console.error(error) if error
 
+setupBookmarks = ->
+  bookmarks = $('section h1 a').toArray().reverse()
+  $(document).on "scroll", ->
+    filtered = bookmarks.filter (bookmark) -> window.scrollY >= $(bookmark).offset().top
+    bookmark = filtered[0]
+    bookmarkHash = (if bookmark then "#"+bookmark.id else "")
+    if location.hash isnt bookmarkHash
+      [baseUrl] = location.toString().split("#")
+      history.replaceState({}, "", "#{baseUrl}#{bookmarkHash}")
+    if location.hash
+      window.hashOffset = window.scrollY - $(location.hash).offset().top
+    else
+      window.hashOffset = 0
 
 makeMiniLockFileAndDecrypt = (done) ->
   $('a.secret_key').removeClass("fits jams")
@@ -73,15 +68,16 @@ makeMiniLockFileAndDecrypt = (done) ->
 makeMiniLockFileAndDecrypt.debounced = _.debounce(makeMiniLockFileAndDecrypt, 500)
 
 makeMiniLockFile = (callback) ->
-  miniLockIDs = $('input[name=minilock_ids]:checked').map((i, el) -> el.value).toArray()
-  miniLockIDs.push($('input[name=minilock_ids][type=text]').val()) if $('input[name=encrypt_for_my_minilock_id]:checked').size()
+  unencryptedFileInput = '#input_files div.unencrypted.file.input'
+  encryptedFileInput   = '#input_files div.encrypted.file.input'
+
   miniLockLib.encrypt
-    version: 2
-    data: new Blob([$("textarea").val()])
-    name:  $('input[name=unencrypted_name]').val()
-    keys: window.characters[$('select').val()]
-    type: "text/plain"
-    miniLockIDs: miniLockIDs
+    version: Number $("#{encryptedFileInput} input[name=version]").val()
+    data: new Blob([$("#{unencryptedFileInput} textarea").val()])
+    name: $("#{unencryptedFileInput} input[name=name]").val()
+    type: $("#{unencryptedFileInput} input[name=type]").val()
+    keys: window.characters[$("#{encryptedFileInput} select[name=keys]").val()]
+    miniLockIDs: $('input[name=minilock_ids]:checked').map((i, el) -> el.value).toArray()
     callback: (error, encrypted) ->
       if encrypted
         callback(error, encrypted.data)
@@ -140,7 +136,8 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   )
   $('#introduction_minilock_filename').html($('div.encrypted.input.file input[type=text]').val())
   $('#decrypt_summary').toggleClass("empty", decrypted is undefined)
-  $("#summary_of_decrypted_ciphertext").html templates["summary_of_decrypted_ciphertext"](
+  $("#summary_of_decrypted_ciphertext").html ecoTemplates["summary_of_decrypted_ciphertext.html"](
+    version: header.version
     name: decrypted?.name
     type: decrypted?.type
     time: decrypted?.time
@@ -306,7 +303,7 @@ renderMarginBytes = (section, operation, start, end, done) ->
     done(error)
 
 renderByteStream = (u8intArray) ->
-  bytes = ('<b class="byte" title="0x'+byte.toString(16)+'" style="background-color:rgb('+byte+','+byte+','+byte+');"></b>' for byte in u8intArray)
+  bytes = ('<b class="byte" title="Byte #'+index+' of '+u8intArray.length+' : '+byte.toString(10)+' : 0x'+byte.toString(16)+'" style="background-color:rgb('+byte+','+byte+','+byte+');"></b>' for byte, index in u8intArray)
   '<span class="byte_stream">['+bytes.join("")+']</span>'+'<span class="byte_stream_size">'+bytes.length+'</span>'
 
 

@@ -1,0 +1,13 @@
+
+<h1>The First Chunk<a id="the_first_chunk"></a></h1>
+<p>
+  In version 1, the first chunk of ciphertext is reserved for the file <code>name</code> attribute.
+  The decrypted chunk is always <code>256</code> bytes long.
+  The encrypted chunk is <code>276</code> bytes because the encryption scheme adds <code>20</code> bytes.
+</p>
+<p>Read and decrypt the first chunk of ciphertext like this:</p>
+<pre>
+startOfCiphertext = <span id="start_of_ciphertext_for_first_chunk"></span>
+encryptedChunk = file.read(startOfCiphertext, startOfCiphertext+428)
+decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, false)
+</pre>

@@ -1,0 +1,30 @@
+<div id="input_files">
+  <div class="unencrypted input file">
+    <fieldset>
+      <img src="input_file_icon.svg">
+      <textarea>miniLock is file encryption software that does more with less.</textarea>
+    </fieldset>
+    <input type="text" name="name" value="Simple.txt">
+  </div>
+  <img src="black_arrow.svg" class="first arrow">
+  <div class="encrypted input file">
+    <div id="encrypted_by">
+      <label>Author:</label>
+      <select id="encrypted_by_input" name="keys">
+        <option>Alice</option>
+        <option>Bobby</option>
+        <option>Sarah</option>
+      </select>
+    </div>
+    <fieldset>
+      <img src="input_file_icon.svg">
+      <legend>Permits:</legend>
+      <div><label><input type="checkbox" name="minilock_ids" value="CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw" checked> Alice</label></div>
+      <div><label><input type="checkbox" name="minilock_ids" value="2CtUp8U3iGykxaqyEDkGJjgZTsEtzzYQCd8NVmLspM4i2b" checked> Bobby</label></div>
+      <div><label><input type="checkbox" name="minilock_ids" value="2H6TvBdYdWxy5z6KW6Ba5ZBb3B4XFAGVPsCHKmoYyJijCK"> Sarah</label></div>
+    </fieldset>
+    <input type="text" name="name" value="Secret.minilock">
+    <input type="hidden" name="version" value="<%= @version %>">
+  </div>
+  <img src="black_arrow.svg" class="second arrow">
+</div>

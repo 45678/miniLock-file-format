@@ -1,0 +1,14 @@
+<h1>File Name<a id="file_name"></a></h1>
+<p>
+  The first <code>256</code> slots in the chunk are reserved for the <code>name</code> of the file.
+  To get it, slice off the first <code>256</code> bytes, filter out any <code>null</code> bytes and then encode the remaing bytes in UTF-8.
+  Don’t be surprised if the <code>name</code> is blank because that is a possibility.
+</p>
+<pre>
+sliceOfBytes   = decryptedChunk.slice(0, 256)
+filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
+name           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
+</pre>
+<p>
+<code id="decrypted_name"></code> is the decrypted <code>name</code> of this file.
+</p>

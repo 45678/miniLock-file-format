@@ -1,0 +1,110 @@
+
+<section id="header_section"><div class="margin_bytes"></div>
+<h1 class="invisible">Header<a id="header"></a></h1>
+<p>
+  The <code>header</code> of a miniLock file is a UTF-8 encoded JSON string.
+  The header bytes always start at <code>slot 12</code>.
+  In this file the header bytes end at <code id="end_slot_of_header_bytes">slot 645</code>.
+  Read, encode and parse the header bytes like this:
+</p>
+<pre>
+headerBytes = file.read(12, <span id="end_of_header_bytes">645</span>)
+serializedHeader = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(headerBytes)
+header = <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">JSON.parse</a>(serializedHeader)
+</pre>
+<p>
+  The parsed <code>header</code> of this file looks like this:
+</p>
+<pre id="parsed_header"></pre>
+<p>
+  <code>version</code> specifies the miniLock file format version number.
+  Usually it is <code>1</code> right now. Someday soon it might be <code>2</code> more often.
+</p>
+<p>
+  <code>ephemeral</code> is a Base64 encoded 32-byte public key.
+  It is one of twp keys that is required to <a href="#decrypt_a_permit">decrypt a permit</a>.
+</p>
+<p>
+  <code>decryptInfo</code> contains a <code>nonce:encryptedPermit</code> pair for each recipient.
+  Each <code>nonce</code> is a Base64 encoded 16-byte unique nonce that is required to decrypt the <code>encryptedPermit</code>.
+  Each <code>encryptedPermit</code> is a Base64 encoded string of encrypted and serialized JSON bytes.
+</p>
+
+
+<h1>Decoding the Header<a id="decoding_the_header"></a></h1>
+<p>
+  Since most members of <code>header</code> are Base64 encoded
+  we will need to decode them before we go any further.
+  First lets decode the <code>ephemeral</code> key:
+</p>
+<pre>
+ephemeral = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(header.ephemeral)
+</pre>
+<p>
+  OK, <code>ephemeral</code> key is <span id="decoded_ephemeral_key"></span>.
+  We will use it later when we attempt to <a href="#decrypt_a_permit">decrypt a permit</a>.
+</p>
+
+<p>
+  Next we’ll decode each <code>nonce</code> and <code>encryptedPermit</code> in <code>header.decryptInfo</code>:
+</p>
+
+<pre>
+encryptedPermits = {}
+for encodedNonce, encodedEncryptedPermit of header.decryptInfo
+  nonce = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(encodedNonce)
+  encryptedPermit = <a href="https://github.com/dchest/tweetnacl-js#naclutildecodebase64string">NaCl.util.decodeBase64</a>(encodedEncryptedPermit)
+  encryptedPermits[nonce] = encryptedPermit
+</pre>
+
+<p>
+  Now we have <code id="number_of_permits"></code> encrypted permits that we can attempt to unlock with our keys.
+</p>
+
+<h1>Decrypt a Permit<a id="decrypt_a_permit"></a></h1>
+<p>
+  miniLock permits are encrypted with the <a href="http://nacl.cr.yp.to/box.html">public-key authenticated encryption scheme</a> defined in the <a href="http://nacl.cr.yp.to/">Networking and Cryptography library</a>.
+  Ports of this popular library are available for many programming languages.
+  This document features <a href="https://dchest.github.io/tweetnacl-js/">TweetNaCl.js</a> for ECMAScript.
+</p>
+<p>
+  Two keys and a <code>nonce</code> are required to decrypt a permit.
+  The first key is the <code>ephemeral</code> key.
+  The second key is the permit recipient’s <code>secretKey</code>.
+  Loop through the <code>encryptedPermits</code> until you find one that matches your keys:
+</p>
+<pre>
+for nonce, encryptedPermit of encryptedPermits
+  decryptedPermit = <a href="https://github.com/dchest/tweetnacl-js/blob/master/README.md#naclboxopenbox-nonce-theirpublickey-mysecretkey">NaCl.box.open</a>(encryptedPermit, nonce, ephemeral, secretKey)
+  if decryptedPermit
+    permit = <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">JSON.parse</a>(decryptedPermit)
+</pre>
+<p>
+  Here is the <code>permit</code> that was decrypted with <span class="keyholder">?</span>’s <code>secretKey</code>:
+</p>
+<pre id="permit_with_encoded_file_info"></pre>
+<p>
+  <code>permit.senderID</code> identifies the person who created the miniLock file.
+</p>
+<p>
+  <code>permit.recipientID</code> identifies the recipient of the <code>permit</code>.
+  Readers can use this to verify the <code>recipientID</code> matches the miniLock ID bound to their <code>secretKey</code>.
+</p>
+<p>
+  <code>permit.fileInfo</code> consists of three members: <code>fileKey</code>, <code>fileNonce</code> and <code>fileHash</code>.
+  All are Base64 encoded strings.
+  Lets decode them to get a look at their bytes:
+<pre id="permit"></pre>
+<p>
+  <code>fileKey</code> is the 32-byte secret key for the ciphertext.
+  <code>fileNonce</code> is the 16-byte nonce for the ciphertext.
+  We will use these in a moment when we prepare to decrypt the ciphertext stream.
+</p>
+<p>
+
+</p>
+<p>
+  <code>fileHash</code> is a 32-byte <a href="https://blake2.net/">BLAKE2</a> hash digest of the original cleartext.
+  Use it to <a href="">verify the integrity of the decrypted bytes</a> when you have finished decrypting.
+</p>
+</section>

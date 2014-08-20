@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>miniLock File Format Version 2</title>
+  <link rel="stylesheet" href="stylesheet.css" charset="utf-8">
+  <script src="node_modules/miniLockLib/scripts/miniLockLib.js" charset="utf-8"></script>
+  <script src="node_modules/zepto/zepto.min.js" charset="utf-8"></script>
+  <script src="node_modules/underscore/underscore.js" charset="utf-8"></script>
+  <script src="node_modules/async/lib/async.js" charset="utf-8"></script>
+  <script src="compiled/characters.js" charset="utf-8"></script>
+  <script src="compiled/templates.js" charset="utf-8"></script>
+  <script src="compiled/summary_of_decrypted_ciphertext.html.js" charset="utf-8"></script>
+  <script src="compiled/demo.js" charset="utf-8"></script>
+</head>
+<body class="v2 loading"><a id="introduction"></a>
+
+<div id="title">
+  <h1><strong>miniLock</strong></h1>
+  <h1>File Format</h1>
+  <h1 class="versions">
+    <div class="current version">
+      <b><a href="1.html">Version 1</a></b>
+      <br><label>Current</label>
+    </div>
+    <div class="draft version">
+      <b><a>Version 2</a></b>
+      <br><label>Draft</label>
+    </div>
+  </h1>
+  <img id="minilock_file_icon" src="minilock_file_icon_black.svg">
+</div>
+<p id="discuss">
+  <a href="https://github.com/kaepora/miniLock/pull/136">Discuss this proposal at miniLock HQ</a>
+</p>
+
+<%- @render "introduction_section" %>
+
+<article class="blob">
+<%- @render "magic_bytes_section" %>
+<%- @render "size_of_header_section" %>
+<%- @render "header_section" %>
+<%- @render "ciphertext_section", version: 2 %>
+</article>
+
+<%- @render "nav" %>
+<%- @render "input_files", version: 2 %>
+<%- @render "section_sizes_graphic" %>
+<%- @render "scrollgraph" %>
+
+</body>

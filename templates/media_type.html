@@ -1,0 +1,16 @@
+<h1>Media Type <em>Introduced in Version 2</em><a id="media_type"></a></h1>
+<p>
+  The next <code>128</code> slots in the chunk are reserved to record the file <code>type</code>.
+  If present, <code>type</code> is expected to be a registered media type such as <code>text/plain</code> or <code>image/jpeg</code>.
+  It may also be blank.
+  The fixed size of <code>128</code> slots was informed by the media type <a href="http://tools.ietf.org/html/rfc6838#section-4.2">naming requirements defined in RFC6838</a>.
+  Slice, filter and then encode the bytes like so:
+</p>
+<pre>
+sliceOfBytes   = decryptedChunk.slice(256, 384)
+filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
+type           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
+</pre>
+<p>
+<code id="decrypted_type"></code> is the decrypted <code>type</code> of this file.
+</p>

@@ -1,0 +1,14 @@
+<h1>Encrypt Time <em>Introduced in Version 2</em><a id="encrypt_time"></a></h1>
+<p>
+  The last <code>24</code> slots in the chunk are reserved to record the <code>time</code> when the file was encrypted.
+  <code>time</code> is expected to be a <a href="http://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations">ISO 8601 extended format timestamp</a> or a blank string.
+  The <code>time</code> parsing routine is the same as the <code>name</code> and <code>type</code> routines: slice, filter and then encode:
+</p>
+<pre>
+sliceOfBytes   = decryptedChunk.slice(384, 408)
+filteredBytes  = (b for b in sliceOfBytes when b isnt 0)
+time           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeutf8array">NaCl.util.encodeUTF8</a>(filteredBytes)
+</pre>
+<p>
+The <code>time</code> says this file was encrypted on <code id="decrypted_time"></code>.
+</p>
