@@ -49,27 +49,27 @@
       
         __out.push(__sanitize(this.miniLockFileSize / 4));
       
-        __out.push('px"></b> ');
+        __out.push('px"></b> <label>');
       
         __out.push(__sanitize(this.miniLockFileSize));
       
-        __out.push(' bytes\nHeader Size:      <b class="header size_graphic" style="width:');
+        __out.push(' bytes</label>\nHeader Size:      <b class="header size_graphic" style="width:');
       
         __out.push(__sanitize(this.sizeOfHeader / 4));
       
-        __out.push('px"></b> ');
+        __out.push('px"></b> <label>');
       
         __out.push(__sanitize(this.sizeOfHeader));
       
-        __out.push(' bytes\nCiphertext Size:  <b class="ciphertext size_graphic" style="width:');
+        __out.push(' bytes</label>\nCiphertext Size:  <b class="ciphertext size_graphic" style="width:');
       
         __out.push(__sanitize(this.sizeOfCiphertext / 4));
       
-        __out.push('px"></b> ');
+        __out.push('px"></b> <label>');
       
         __out.push(__sanitize(this.sizeOfCiphertext));
       
-        __out.push(' bytes\nminiLock Version: ');
+        __out.push(' bytes</label>\nminiLock Version: ');
       
         __out.push(__sanitize(this.version));
       

@@ -246,8 +246,9 @@ a.secret_key.jams {
   margin-top: -3px;
 }
 
-span.encoded_permit {
-  color: hsl(0, 0%, 50%);
+#unencrypted_summary label,
+#unencrypted_summary span.encoded_permit {
+  color: hsla(0, 0%, 0%, 0.33);
 }
 
 

@@ -1,8 +1,8 @@
 <pre>
 File Name:        <%= @miniLockFileName %>
-File Size:        <b class="size_graphic" style="width:<%= @miniLockFileSize/4 %>px"></b> <%= @miniLockFileSize %> bytes
-Header Size:      <b class="header size_graphic" style="width:<%= @sizeOfHeader/4 %>px"></b> <%= @sizeOfHeader %> bytes
-Ciphertext Size:  <b class="ciphertext size_graphic" style="width:<%= @sizeOfCiphertext/4 %>px"></b> <%= @sizeOfCiphertext %> bytes
+File Size:        <b class="size_graphic" style="width:<%= @miniLockFileSize/4 %>px"></b> <label><%= @miniLockFileSize %> bytes</label>
+Header Size:      <b class="header size_graphic" style="width:<%= @sizeOfHeader/4 %>px"></b> <label><%= @sizeOfHeader %> bytes</label>
+Ciphertext Size:  <b class="ciphertext size_graphic" style="width:<%= @sizeOfCiphertext/4 %>px"></b> <label><%= @sizeOfCiphertext %> bytes</label>
 miniLock Version: <%= @version %>
 Ephemeral Key:    <%- @ephemeralKeyHTML %>
 Decrypt Info:     <span class="punctuation">{<%= "}" if @encryptedPermits.length is 0 %></span>
