@@ -74,7 +74,7 @@ makeMiniLockFile = (callback) ->
     version: Number $("#{encryptedFileInput} input[name=version]").val()
     data: new Blob([$("#{unencryptedFileInput} textarea").val()])
     name: $("#{unencryptedFileInput} input[name=name]").val()
-    type: $("#{unencryptedFileInput} input[name=type]").val()
+    type: "text/plain"
     keys: window.characters[$("#{encryptedFileInput} select[name=keys]").val()]
     miniLockIDs: $('input[name=minilock_ids]:checked').map((i, el) -> el.value).toArray()
     callback: (error, encrypted) ->
