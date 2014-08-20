@@ -260,6 +260,28 @@ name           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeu
 
 
 
+<h1>Decrypt Data Chunks<a id="decrypt_data_chunks"></a></h1>
+<p>
+  The ciphertext chunks after <a href="#the_first_chunk">the first chunk</a> contain the binary data of <code>Simple.txt</code>.
+  Each chunk of data is decrypted one at a time in squential order and reassembled into a stream of cleartext.
+</p>
+<p>
+  The encrypted data chunks in this file start at <code id="start_position_of_data_chunks">428</code>
+  and end at <code id="end_position_of_data_chunks">slot ?</code>.
+</p>
+
+<pre>
+startOfChunk   = 1620
+endOfChunk     = Math.min(startOfChunk + maxChunkSize + 20, file.size)
+isLastChunk    = endOfChunk is file.size
+encryptedChunk = file.read(startOfChunk, endOfChunk)
+decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, isLastChunk)
+if decryptedChunk
+  hash.update(decryptedChunk)
+  decrypted.push(decryptedChunk)
+if isLastChunk is false
+  # start again from endOfChunk
+</pre>
 
 
 <h1>Verify the Integrity of the Bytes</h1>

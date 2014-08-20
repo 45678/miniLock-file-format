@@ -41,7 +41,7 @@ decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryp
 <%- @render "file_name" %>
 <%- @render "media_type" if @version is 2 %>
 <%- @render "encrypt_time" if @version is 2 %>
-<%- @render "decrypt_data_chunks" if @version is 2 %>
+<%- @render "decrypt_data_chunks" %>
 
 <h1>Verify the Integrity of the Bytes</h1>
 <p>
