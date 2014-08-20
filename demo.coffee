@@ -17,6 +17,7 @@ $(document).ready (event) ->
     $(document.body).removeClass("loading").addClass("ready")
     $(document).on "scroll", ->
       hash = switch
+        when window.scrollY >= $('#decrypt_data_chunks').offset().top then '#decrypt_data_chunks'
         when window.scrollY >= $('#encrypt_time').offset().top then '#encrypt_time'
         when window.scrollY >= $('#media_type').offset().top then '#media_type'
         when window.scrollY >= $('#file_name').offset().top then '#file_name'
@@ -234,6 +235,8 @@ renderCiphertext = (operation, decrypted, header, sizeOfHeader) ->
   $('#end_of_mime_type_bytes'  ).html(8 + 4 + sizeOfHeader + 256 + 128)
   $('#start_of_time_bytes'     ).html(8 + 4 + sizeOfHeader + 256 + 128)
   $('#end_of_time_bytes'       ).html(8 + 4 + sizeOfHeader + 256 + 128 + 24)
+  $('#start_position_of_data_chunks').html("slot #{8 + 4 + sizeOfHeader + 428}")
+  $('#end_position_of_data_chunks').html("slot #{operation.data.size-1}")
 
 
 renderScrollGraph = ->

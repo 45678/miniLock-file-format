@@ -30,6 +30,8 @@
         var baseUrl, extendArrow, hash;
         hash = (function() {
           switch (false) {
+            case !(window.scrollY >= $('#decrypt_data_chunks').offset().top):
+              return '#decrypt_data_chunks';
             case !(window.scrollY >= $('#encrypt_time').offset().top):
               return '#encrypt_time';
             case !(window.scrollY >= $('#media_type').offset().top):
@@ -322,7 +324,9 @@
     $('#start_of_mime_type_bytes').html(8 + 4 + sizeOfHeader + 256);
     $('#end_of_mime_type_bytes').html(8 + 4 + sizeOfHeader + 256 + 128);
     $('#start_of_time_bytes').html(8 + 4 + sizeOfHeader + 256 + 128);
-    return $('#end_of_time_bytes').html(8 + 4 + sizeOfHeader + 256 + 128 + 24);
+    $('#end_of_time_bytes').html(8 + 4 + sizeOfHeader + 256 + 128 + 24);
+    $('#start_position_of_data_chunks').html("slot " + (8 + 4 + sizeOfHeader + 428));
+    return $('#end_position_of_data_chunks').html("slot " + (operation.data.size - 1));
   };
 
   renderScrollGraph = function() {

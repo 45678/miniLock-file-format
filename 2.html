@@ -277,13 +277,28 @@ time           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeu
 The <code>time</code> says this file was encrypted on <code id="decrypted_time"></code>.
 </p>
 
-<h1>Decrypting Each Remaining Slice of Ciphertext</h1>
+<h1>Decrypt Data Chunks<a id="decrypt_data_chunks"></a></h1>
 <p>
-  This is the same as version 1 and I am too lazy to explain it right now.
+  The ciphertext chunks after <a href="#the_first_chunk">the first chunk</a> contain the binary data of <code>Simple.txt</code>.
+  Each chunk of data is decrypted one at a time in squential order and reassembled into a stream of cleartext.
 </p>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  The encrypted data chunks in this file start at <code id="start_position_of_data_chunks">428</code>
+  and end at <code id="end_position_of_data_chunks">slot ?</code>.
 </p>
+
+<pre>
+startOfChunk   = 1620
+endOfChunk     = Math.min(startOfChunk + maxChunkSize + 20, file.size)
+isLastChunk    = endOfChunk is file.size
+encryptedChunk = file.read(startOfChunk, endOfChunk)
+decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, isLastChunk)
+if decryptedChunk
+  hash.update(decryptedChunk)
+  decrypted.push(decryptedChunk)
+if isLastChunk is false
+  # start again from endOfChunk
+</pre>
 
 <h1>Verify the Integrity of the Bytes</h1>
 <p>
