@@ -121,7 +121,7 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   else
     encryptedPermits = []
 
-  $('#unencrypted_summary').html templates["unencrypted_summary"](
+  $('#unencrypted_summary').html ecoTemplates["unencrypted_summary.html"](
     miniLockFileName: $('div.encrypted.input.file input[type=text]').val()
     miniLockFileSize: operation.data.size
     magicBytesHTML: renderByteStream [109,105,110,105,76,111,99,107]

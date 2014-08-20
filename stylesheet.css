@@ -8,6 +8,8 @@ h1 em { font-style:normal; font-weight:normal; opacity:0.5; border:1px dotted bl
 
 code { background-color: hsla(0, 0%, 100%, 0.33); padding:0px 3px; margin: 0px -3px;}
 
+span.punctuation { color: hsla(0, 0%, 0%, 0.33); }
+
 p { margin: 15px 0; }
 
 pre { background-color: hsla(0, 0%, 100%, 0.33); overflow: hidden; padding: 0px 5px; margin: 20px -5px 20px;}
