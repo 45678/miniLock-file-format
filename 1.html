@@ -227,6 +227,12 @@ fileNonce: <span id="ciphertext_file_nonce"></span>
 maxChunkSize = 1024 * 1024
 decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryptorkey-nonce-maxchunklength">NaCl.stream.createDecryptor</a>(fileKey, fileNonce, maxChunkSize)
 </pre>
+<p>
+  Also construct a 32-byte BLAKE2 hash to record the decrypted bytestream so that it can be compared with <code>fileHash</code> durring <a href="">integrity verfiication</a>.
+</p>
+<pre>
+hash = new BLAKE2(32)
+</pre>
 
 
 <h1>The First Chunk<a id="the_first_chunk"></a></h1>
@@ -264,29 +270,11 @@ name           = <a href="https://github.com/dchest/tweetnacl-js#naclutilencodeu
   The ciphertext chunks after <a href="#the_first_chunk">the first chunk</a> contain the binary data of <code>Simple.txt</code>.
   Each chunk of data is decrypted one at a time in squential order and reassembled into a stream of cleartext.
 </p>
-<p>
-  The encrypted data chunks in this file start at <code id="start_position_of_data_chunks">428</code>
-  and end at <code id="end_position_of_data_chunks">slot ?</code>.
-</p>
 
 <pre>
-startOfChunk   = 1620
-endOfChunk     = Math.min(startOfChunk + maxChunkSize + 20, file.size)
-isLastChunk    = endOfChunk is file.size
-encryptedChunk = file.read(startOfChunk, endOfChunk)
-decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, isLastChunk)
-if decryptedChunk
-  hash.update(decryptedChunk)
-  decrypted.push(decryptedChunk)
-if isLastChunk is false
-  # start again from endOfChunk
+decryptedChunks = []
 </pre>
 
-<h1>Decrypt Data Chunks<a id="decrypt_data_chunks"></a></h1>
-<p>
-  The ciphertext chunks after <a href="#the_first_chunk">the first chunk</a> contain the binary data of <code>Simple.txt</code>.
-  Each chunk of data is decrypted one at a time in squential order and reassembled into a stream of cleartext.
-</p>
 <p>
   The encrypted data chunks in this file start at <code id="start_position_of_data_chunks">428</code>
   and end at <code id="end_position_of_data_chunks">slot ?</code>.
@@ -298,11 +286,22 @@ endOfChunk     = Math.min(startOfChunk + maxChunkSize + 20, file.size)
 isLastChunk    = endOfChunk is file.size
 encryptedChunk = file.read(startOfChunk, endOfChunk)
 decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, isLastChunk)
-if decryptedChunk
-  hash.update(decryptedChunk)
-  decrypted.push(decryptedChunk)
-if isLastChunk is false
-  # start again from endOfChunk
+decryptedChunks.push(decryptedChunk)
+hash.update(decryptedChunk)
+# Repeat from endOfChunk if isLastChunk is false
+</pre>
+
+<p>
+  Create a digest of <code>hash</code> and compare it with the <code>fileHash</code> that was received in <a href="">Alice’s permit</a>
+  after the last chunk has been processed.
+  If the digests are not identical the integrity of the decrypted bytes has been compromised.
+</p>
+<pre>
+if isLastChunk
+  if hash.digest() is fileHash
+    # The integrity of the name, type, time and data were verified.
+  else
+    # The integrity of this file has been compromised.
 </pre>
 
 <h1>Verify the Integrity of the Bytes</h1>

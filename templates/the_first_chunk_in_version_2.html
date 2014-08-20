@@ -9,4 +9,5 @@
 startOfCiphertext = <span id="start_of_ciphertext_for_first_chunk"></span>
 encryptedChunk = file.read(startOfCiphertext, startOfCiphertext+428)
 decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecryptchunkencryptedchunk-islast">decryptor.decryptChunk</a>(encryptedChunk, false)
+hash.update(decryptedChunk)
 </pre>

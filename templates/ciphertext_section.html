@@ -35,12 +35,17 @@ fileNonce: <span id="ciphertext_file_nonce"></span>
 maxChunkSize = 1024 * 1024
 decryptor = <a href="https://github.com/dchest/nacl-stream-js#streamcreateencryptorkey-nonce-maxchunklength">NaCl.stream.createDecryptor</a>(fileKey, fileNonce, maxChunkSize)
 </pre>
+<p>
+  Also construct a 32-byte BLAKE2 hash to record the decrypted bytestream so that it can be compared with <code>fileHash</code> durring <a href="">integrity verfiication</a>.
+</p>
+<pre>
+hash = new BLAKE2(32)
+</pre>
 
 <%- @render "the_first_chunk_in_version_#{@version}" %>
 <%- @render "file_name" %>
 <%- @render "media_type" if @version is 2 %>
 <%- @render "encrypt_time" if @version is 2 %>
-<%- @render "decrypt_data_chunks" %>
 <%- @render "decrypt_data_chunks" %>
 <%- @render "ciphertext_integrity" %>
 </section>
