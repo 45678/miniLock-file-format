@@ -9,6 +9,4 @@
 
   templates["decrypt_status_failed"] = _.template("<div><em>Oh-no!</em> <%- name %>’s secret key doesn’t fit. There is nothing to see:</div>");
 
-  templates["parsed_header"] = _.template("version:     <%- version %>\nephemeral:   \"<%- ephemeral %>\"\ndecryptInfo: <%= decryptInfo %>");
-
 }).call(this);

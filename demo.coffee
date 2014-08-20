@@ -173,7 +173,7 @@ renderHeader = (decrypted, header, sizeOfHeader) ->
   $('#header_section span.keyholder').html(window.keys.name)
   $('#end_of_header_bytes').html(12+sizeOfHeader)
   $('#end_slot_of_header_bytes').html("slot #{12+sizeOfHeader}")
-  $('#parsed_header').html templates["parsed_header"](
+  $('#parsed_header').html ecoTemplates["parsed_header.html"](
     version: header.version
     ephemeral: header.ephemeral
     decryptInfo: JSON.stringify(header.decryptInfo, undefined, 2)
