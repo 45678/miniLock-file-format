@@ -1,9 +1,11 @@
 <h1>Decrypt Data Chunks<a id="decrypt_data_chunks"></a></h1>
 <p>
-  The ciphertext chunks after <a href="#the_first_chunk">the first chunk</a> contain the binary data of <code>Simple.txt</code>.
-  Each chunk of data is decrypted one at a time in squential order and reassembled into a stream of cleartext.
+  The ciphertext chunks after <a href="#the_first_chunk">the first chunk</a> contain the complete byte stream of <code>Simple.txt</code>.
+  Each chunk is decrypted in squential order so that it can be reassembled into a coherent stream of cleartext at the end of the routine.
 </p>
-
+<p>
+  First, construct an empty array to collect the <code>decryptedChunks</code>:
+</p>
 <pre>
 decryptedChunks = []
 </pre>
@@ -22,17 +24,4 @@ decryptedChunk = <a href="https://github.com/dchest/nacl-stream-js#decryptordecr
 decryptedChunks.push(decryptedChunk)
 hash.update(decryptedChunk)
 # Repeat from endOfChunk if isLastChunk is false
-</pre>
-
-<p>
-  Create a digest of <code>hash</code> and compare it with the <code>fileHash</code> that was received in <a href="">Alice’s permit</a>
-  after the last chunk has been processed.
-  If the digests are not identical the integrity of the decrypted bytes has been compromised.
-</p>
-<pre>
-if isLastChunk
-  if hash.digest() is fileHash
-    # The integrity of the name, type, time and data were verified.
-  else
-    # The integrity of this file has been compromised.
 </pre>

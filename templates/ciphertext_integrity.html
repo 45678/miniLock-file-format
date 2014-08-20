@@ -1,4 +1,19 @@
-<h1>Verify the Integrity of the Bytes</h1>
+<h1>Cleartext Integrity</h1>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  Create a digest of <code>hash</code> and compare it with the <code>fileHash</code> that was received in <a href="">Alice’s permit</a>
+  after the last chunk has been processed.
+  If the digests are not identical the integrity of the decrypted bytes has been compromised.
 </p>
+<pre>
+if isLastChunk
+  if hash.digest() is fileHash
+    # The integrity of the name, type, time and data were verified.
+  else
+    # The integrity of this file has been compromised.
+</pre>
+
+<pre>
+data = new Blob(decryptedChunks)
+if type is "text/plain"
+  text = NaCl.util.encodeUTF8(data)
+</pre>
