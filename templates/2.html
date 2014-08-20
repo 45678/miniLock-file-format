@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <%- @render "head", version: 2 %>
 <body class="v2 loading"><a id="introduction"></a>
-
 <div id="title">
   <h1><strong>miniLock</strong></h1>
   <h1>File Format</h1>
@@ -20,19 +19,15 @@
 <p id="discuss">
   <a href="https://github.com/kaepora/miniLock/pull/136">Discuss this proposal at miniLock HQ</a>
 </p>
-
 <%- @render "introduction_section" %>
-
 <article class="blob">
 <%- @render "magic_bytes_section" %>
 <%- @render "size_of_header_section" %>
 <%- @render "header_section" %>
 <%- @render "ciphertext_section", version: 2 %>
 </article>
-
 <%- @render "nav" %>
 <%- @render "input_files", version: 2 %>
 <%- @render "section_sizes_graphic" %>
 <%- @render "scrollgraph" %>
-
 </body>
