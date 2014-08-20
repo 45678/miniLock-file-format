@@ -7,8 +7,6 @@
 
   templates["summary_of_decrypted_header"] = _.template("Author is:     <%- authorName %>\nAuthor ID:     <%- headerSenderID %>\nFile Key:      <%= headerFileKeyHTML %>\nFile Nonce:    <%= headerFileNonceHTML %>\nFile Hash:     <%= headerFileHashHTML %>");
 
-  templates["margin_byte"] = _.template("<div class=\"byte\">\n  <div class=\"index\"><%- index %></div>\n  <div class=\"value\"><%- base16 %></div>\n</div>");
-
   templates["decrypt_status_ok"] = _.template("<div><em>Ah-ha!</em> <%- name %>’s secret key unlocks the file! Look see:</div>");
 
   templates["decrypt_status_failed"] = _.template("<div><em>Oh-no!</em> <%- name %>’s secret key doesn’t fit. There is nothing to see:</div>");

@@ -391,7 +391,7 @@
         _ref = sliceOfBytes.subarray(0, stopAt);
         for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
           byte = _ref[index];
-          tags.push(templates["margin_byte"]({
+          tags.push(ecoTemplates["margin_byte.html"]({
             index: ((start + index) / 10000).toFixed(4).replace("0.", ""),
             base10: byte.toString(10),
             base16: "0x" + (byte.toString(16))
@@ -401,7 +401,7 @@
         _ref1 = sliceOfBytes.subarray(totalBytes - 3, totalBytes);
         for (index = _j = 0, _len1 = _ref1.length; _j < _len1; index = ++_j) {
           byte = _ref1[index];
-          tags.push(templates["margin_byte"]({
+          tags.push(ecoTemplates["margin_byte.html"]({
             index: ((start + index + totalBytes - 3) / 10000).toFixed(4).replace("0.", ""),
             base10: byte.toString(10),
             base16: "0x" + (byte.toString(16))
@@ -410,7 +410,7 @@
       } else {
         for (index = _k = 0, _len2 = sliceOfBytes.length; _k < _len2; index = ++_k) {
           byte = sliceOfBytes[index];
-          tags.push(templates["margin_byte"]({
+          tags.push(ecoTemplates["margin_byte.html"]({
             index: ((start + index) / 10000).toFixed(4).replace("0.", ""),
             base10: byte.toString(10),
             base16: "0x" + (byte.toString(16))

@@ -278,21 +278,21 @@ renderMarginBytes = (section, operation, start, end, done) ->
       snipHeight = ($(section).height()-2) % 30
       stopAt = if snipHeight+10 > 30 then maxBytes-4 else maxBytes-3
       for byte, index in sliceOfBytes.subarray(0,stopAt)
-        tags.push templates["margin_byte"](
+        tags.push ecoTemplates["margin_byte.html"](
           index: ((start + index) / 10000).toFixed(4).replace("0.", "")
           base10: byte.toString(10)
           base16: "0x#{byte.toString(16)}"
         )
       tags.push """<div class="snip" style="margin: -5px 0px -4px; height:#{snipHeight+10}px"><label style="display:none;">SNIPPED #{totalBytes-maxBytes} BYTES</label></div>"""
       for byte, index in sliceOfBytes.subarray(totalBytes - 3,totalBytes)
-        tags.push templates["margin_byte"](
+        tags.push ecoTemplates["margin_byte.html"](
           index: ((start + index + totalBytes - 3) / 10000).toFixed(4).replace("0.", "")
           base10: byte.toString(10)
           base16: "0x#{byte.toString(16)}"
         )
     else
       for byte, index in sliceOfBytes
-        tags.push templates["margin_byte"](
+        tags.push ecoTemplates["margin_byte.html"](
           index: ((start + index) / 10000).toFixed(4).replace("0.", "")
           base10: byte.toString(10)
           base16: "0x#{byte.toString(16)}"

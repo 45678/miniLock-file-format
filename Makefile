@@ -1,4 +1,4 @@
-default: 1.html 2.html compiled/characters.js compiled/demo.js compiled/templates.js compiled/summary_of_decrypted_ciphertext.html.js compiled/decrypt_keys.html.js
+default: 1.html 2.html compiled/characters.js compiled/demo.js compiled/templates.js compiled/summary_of_decrypted_ciphertext.html.js compiled/decrypt_keys.html.js compiled/margin_byte.html.js
 
 clean:
 	rm compiled/*.js
@@ -13,6 +13,9 @@ compiled/templates.js: templates.coffee
 	coffee --print $< > $@
 
 compiled/decrypt_keys.html.js: templates/decrypt_keys.html
+	eco --print $< > $@
+
+compiled/margin_byte.html.js: templates/margin_byte.html
 	eco --print $< > $@
 
 compiled/summary_of_decrypted_ciphertext.html.js: templates/summary_of_decrypted_ciphertext.html

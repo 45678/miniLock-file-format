@@ -28,13 +28,6 @@ templates["summary_of_decrypted_header"] = _.template """
   File Hash:     <%= headerFileHashHTML %>
 """
 
-templates["margin_byte"] = _.template """
-<div class="byte">
-  <div class="index"><%- index %></div>
-  <div class="value"><%- base16 %></div>
-</div>
-"""
-
 templates["decrypt_status_ok"] = _.template """
 <div><em>Ah-ha!</em> <%- name %>’s secret key unlocks the file! Look see:</div>
 """
