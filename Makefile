@@ -1,4 +1,8 @@
 SCRIPTS = \
+	compiled/miniLockLib.js \
+	compiled/async.js \
+	compiled/underscore.js \
+	compiled/zepto.min.js \
 	compiled/characters.js \
 	compiled/demo.js \
 
@@ -23,6 +27,18 @@ compiled/%.js: %.coffee
 
 compiled/%.html.js: templates/%.html
 	eco --print $< > $@
+
+compiled/miniLockLib.js:
+	cp node_modules/miniLockLib/scripts/miniLockLib.js $@
+
+compiled/async.js:
+	cp node_modules/async/lib/async.js $@
+
+compiled/underscore.js:
+	cp node_modules/underscore/underscore.js $@
+
+compiled/zepto.min.js:
+	cp node_modules/zepto/zepto.min.js $@
 
 clean:
 	rm compiled/*.js
