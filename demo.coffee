@@ -15,10 +15,11 @@ $(document).ready (event) ->
     else
       $(document.body).removeClass("loading").addClass("ready")
       $(location.hash).get(0).scrollIntoView() if location.hash
+      renderEncryptedInputFileArrow()
       setupBookmarks()
 
 $(document).on "scroll", ->
-  $('#input_files > img.arrow').toggleClass("extended", $('#input_files').offset().top - $('#magic_bytes').offset().top < -30)
+  renderEncryptedInputFileArrow()
 
 $(document).on "input", "#input_files textarea, #input_files input[type=text]", (event) ->
   makeMiniLockFileAndDecrypt.debounced (error) ->
@@ -305,6 +306,9 @@ renderByteStream = (u8intArray) ->
   bytes = ('<b class="byte" title="Byte #'+index+' of '+u8intArray.length+' : '+byte.toString(10)+' : 0x'+byte.toString(16)+'" style="background-color:rgb('+byte+','+byte+','+byte+');"></b>' for byte, index in u8intArray)
   '<span class="byte_stream">['+bytes.join("")+']</span>'+'<span class="byte_stream_size">'+bytes.length+'</span>'
 
+renderEncryptedInputFileArrow = ->
+  isExtended = -30 > ($('#input_files').offset().top - $('#magic_bytes').offset().top)
+  $('#input_files > img.arrow').toggleClass("extended", isExtended)
 
 numberToByteArray = (n) ->
   byteArray = new Uint8Array(4)

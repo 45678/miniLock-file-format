@@ -1,5 +1,5 @@
 (function() {
-  var Base58, decryptMiniLockFile, defer, makeMiniLockFile, makeMiniLockFileAndDecrypt, numberToByteArray, renderByteStream, renderCiphertext, renderDecryptStatus, renderDecryptedFile, renderHeader, renderIntroduction, renderMagicBytes, renderMarginBytes, renderMarginBytesForEachSection, renderScrollGraph, renderSectionSizeGraphic, renderSizeOfHeader, setupBookmarks;
+  var Base58, decryptMiniLockFile, defer, makeMiniLockFile, makeMiniLockFileAndDecrypt, numberToByteArray, renderByteStream, renderCiphertext, renderDecryptStatus, renderDecryptedFile, renderEncryptedInputFileArrow, renderHeader, renderIntroduction, renderMagicBytes, renderMarginBytes, renderMarginBytesForEachSection, renderScrollGraph, renderSectionSizeGraphic, renderSizeOfHeader, setupBookmarks;
 
   Base58 = miniLockLib.Base58;
 
@@ -23,13 +23,14 @@
         if (location.hash) {
           $(location.hash).get(0).scrollIntoView();
         }
+        renderEncryptedInputFileArrow();
         return setupBookmarks();
       }
     });
   });
 
   $(document).on("scroll", function() {
-    return $('#input_files > img.arrow').toggleClass("extended", $('#input_files').offset().top - $('#magic_bytes').offset().top < -30);
+    return renderEncryptedInputFileArrow();
   });
 
   $(document).on("input", "#input_files textarea, #input_files input[type=text]", function(event) {
@@ -430,6 +431,12 @@
       return _results;
     })();
     return '<span class="byte_stream">[' + bytes.join("") + ']</span>' + '<span class="byte_stream_size">' + bytes.length + '</span>';
+  };
+
+  renderEncryptedInputFileArrow = function() {
+    var isExtended;
+    isExtended = -30 > ($('#input_files').offset().top - $('#magic_bytes').offset().top);
+    return $('#input_files > img.arrow').toggleClass("extended", isExtended);
   };
 
   numberToByteArray = function(n) {
