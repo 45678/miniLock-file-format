@@ -3,7 +3,9 @@ SCRIPTS = \
 	compiled/async.js \
 	compiled/underscore.js \
 	compiled/zepto.min.js \
+	compiled/camera.js \
 	compiled/characters.js \
+	compiled/input_files.js \
 	compiled/demo.js \
 
 COMPILED_TEMPLATES = \

@@ -1,0 +1,28 @@
+span.byte_stream {
+  display:inline-block;
+  vertical-align: top;
+  margin: -2px 0 0;
+  color: hsla(0, 0%, 0%, 0.33);
+}
+
+span.byte_stream_size {
+  color: hsla(0, 0%, 0%, 0.33);
+}
+
+span.byte_stream b.byte {
+  display:inline-block;
+  opacity: 0.66;
+  vertical-align: middle;
+  margin: 0px 1px 0px 1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 10px;
+  border: 2px solid hsl(0, 0%, 0%);
+  position:relative;
+  top: 0px;
+  transition: height 66ms linear;
+}
+span.byte_stream b.byte:hover {
+  height: 18px;
+  transition: height 0ms linear;
+}

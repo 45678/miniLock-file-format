@@ -1,18 +1,3 @@
-body, section, div, pre, fieldset, h1, p, pre { position: relative; box-sizing: border-box; margin: 0; }
-
-a { text-decoration: none; color: inherit; }
-a:link { text-decoration: underline; }
-
-h1 { font:inherit; margin:15px 0 15px; font-weight: bold; }
-h1 em { font-style:normal; font-weight:normal; opacity:0.5; border:1px dotted black; padding:0 5px; }
-
-code { background-color: hsla(0, 0%, 100%, 0.33); padding:0px 3px; margin: 0px -3px;}
-
-span.punctuation { color: hsla(0, 0%, 0%, 0.33); }
-
-p { margin: 15px 0; }
-
-pre { background-color: hsla(0, 0%, 100%, 0.33); overflow: hidden; padding: 0px 5px; margin: 20px -5px 20px;}
 
 /* -------- -------- -------- -------- */
 
@@ -24,23 +9,12 @@ body {
   min-width: 880px;
   max-width: 1000px;
 }
+
 body #introduction {
   position: absolute;
   top: -30px;
 }
 
-body.loading nav > div {
-  opacity: 0.33;
-}
-body.ready nav > div {
-  opacity: 1;
-  transition: opacity 100ms linear;
-}
-body.ready nav > div:nth-child(1) { transition-delay: 50ms; }
-body.ready nav > div:nth-child(2) { transition-delay: 100ms; }
-body.ready nav > div:nth-child(3) { transition-delay: 150ms; }
-body.ready nav > div:nth-child(4) { transition-delay: 200ms; }
-body.ready nav > div:nth-child(5) { transition-delay: 250ms; }
 
 body.loading #discuss,
 body.loading #introduction_section,
@@ -105,7 +79,6 @@ body.v1.ready #title:hover div.draft.version {
   transition: margin-left 300ms ease-out 150ms, opacity 250ms ease-out 150ms;
 }
 
-
 body.v2.loading #title .versions > div:first-child {
   margin-left: 0;
   transition: none;
@@ -134,12 +107,6 @@ body.v2.ready #title:hover .versions > div:first-child {
 #discuss {
   position: absolute;
   margin: 0;
-}
-#discuss a {
-  color: hsl(0, 0%, 50%);
-}
-#discuss a:visited {
-  color: hsl(300, 100%, 25%);
 }
 
 /* -------- -------- -------- -------- */
@@ -224,10 +191,11 @@ a.secret_key.jams {
 }
 
 /* -------- -------- -------- -------- */
+
 #unencrypted_summary,
 #decrypt_summary {
-  box-shadow: 0px 1px 5px hsla(0, 0%, 0%, 0.33);
-  margin: 20px 50px 20px 0;
+  /*box-shadow: 0px 1px 5px hsla(0, 0%, 0%, 0.33);*/
+  margin: 20px 0px 20px 0;
 }
 #unencrypted_summary pre,
 #decrypt_summary pre {
@@ -263,184 +231,69 @@ a.secret_key.jams {
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
   padding: 5px 10px 4px;
 }
-#decrypt_summary pre.header,
-#decrypt_summary pre.ciphertext {
+#decrypt_summary div.header,
+#decrypt_summary div.ciphertext {
   transition: all 300ms linear;
 }
-#decrypt_summary.empty pre.header,
-#decrypt_summary.empty pre.ciphertext {
+#decrypt_summary.empty div.header,
+#decrypt_summary.empty div.ciphertext {
   color: hsl(0, 0%, 50%);
   background-color: hsl(0, 0%, 70%);
 }
 
-/* -------- -------- -------- -------- */
-
-fieldset {
-  display:block;
-  font:inherit;
-  /*border: 2px groove hsl(0, 0%, 75%);*/
-  padding: 0px 8px;
-
+#decrypt_summary {
+  margin-left: 0px;
+  margin: 20px 0;
 }
-
-textarea, input[type=text] {
+#decrypt_summary img.file_icon {
   display: block;
-  font: inherit;
-  border: none;
-  outline: none;
-  padding: 0;
-  width: 100%;
-  margin: 0;
-  background: transparent;
-  box-sizing: border-box;
-  font-size: 12px;
-  line-height: 15px;
+  position: absolute; left: 10px; top: 10px;
+  height: 270px;
 }
-
-div.file.input {
-  width: 96px;
-  height: 120px;
-  font-size: 12px;
-  line-height: 15px;
+#decrypt_summary pre {
+  margin-left: 238px;
 }
-
-div.file.input fieldset {
+#decrypt_summary div.ciphertext pre {
+  height: 130px;
+}
+#decrypt_summary div.text {
+  position: absolute;
   z-index: 1;
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  border: none;
-  padding: 0;
-  border: none;
-  margin: auto;
-}
-
-div.file.input fieldset img {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-}
-
-div.file.input textarea {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  border: none;
-  outline: none;
-  padding: 7px 10px;
-  margin: auto;
-  resize: none;
-}
-
-div.file.input input[type=text] {
-  position: absolute;
-  bottom: -20px;
-  width: 150%;
-  margin-left: -25%;
-  text-align: center;
-}
-
-#input_files {
-  height: 120px;
-  margin: 0;
-  width: 220px;
-  position: fixed;
-  top: 280px;
-  left: 15px;
-}
-
-#input_files > img.arrow {
-  position: absolute;
-  top: 50%;
-  margin-top: -10px;
-  margin-left: -2px;
-  opacity: 0.25;
-}
-
-#input_files > img.arrow.first {
-  left: 45px;
-}
-
-#input_files > img.arrow.second {
-  left: 155px;
-}
-#input_files > img.arrow.second.extended {
-  left: 200px;
-  transition: left 150ms ease-out 300ms;
-}
-
-
-#input_files > div.file.input {
-  position: absolute;
-}
-
-#input_files > div.unencrypted.file.input {
-  left: 0;
-}
-#input_files > div.encrypted.file.input {
-  left: 110px;
-}
-
-#input_files > div.encrypted.file.input fieldset {
-  padding: 68px 10px 0;
-}
-#input_files > div.encrypted.file.input legend {
-  position: absolute;
-  top: 52px;
-  padding: 0;
-  margin: 0;
-}
-
-#input_files #encrypted_by {
-  position: absolute;
   left: 10px;
-  right: 10px;
-  top: 7px;
-  z-index: 2;
+  top: 10px;
+  width: 216px;
+  height: 270px;
+  font-size: 29px;
+  line-height: 35px;
+  overflow: auto;
+  padding: 10px 20px;
+  word-wrap: break-word;
 }
 
-#input_files #encrypted_by select {
-  margin: 0 -3px;
+
+#decrypt_summary div.image {
+  position: absolute;
+  z-index: 1;
+  left: 10px;
+  top: 22px;
+  width: 216px;
+  height: 216px;
+
+}
+#decrypt_summary div.image img {
   display: block;
-  width: 100%;
-  font: inherit;
+  width: inherit;
+  height: inherit;
+  border: 5px solid white;
+  border-bottom: 35px solid white;
+  margin: -5px;
+  box-sizing: content-box;
+  box-shadow: 0px 0px 2px hsla(0, 0%, 0%, 0.33);
 }
 
-input::-webkit-input-placeholder  {
-  color: hsla(0, 0%, 0%, 0.5);
+#decrypt_summary pre.image {
+  padding-left: 130px;
 }
-
-input[type=checkbox] {
-  font: inherit;
-  margin: 0 -3px 0 0;
-}
-
-
-
-/* Nav */
-
-nav {
-  position: fixed;
-  top: 0px;
-  left: 15px;
-  width: 205px;
-  margin-top: 0px;
-}
-
-nav > div {
-  /*height: 55px;*/
-  color: black;
-  margin: 10px 0;
-  text-align: right;
-}
-
-nav a:link {
-  padding: 5px 10px;
-  margin: 0;
-  color: black;
-  outline: 1px dotted hsla(0, 0%, 0%,0.5);
-  display: inline-block;
-  text-decoration: none;
-}
-
 
 /* -------- -------- -------- -------- */
 
@@ -490,22 +343,6 @@ article.blob > section > h1.invisible {
 
 /* -------- -------- -------- -------- */
 
-#scrollgraph {
-  width: 11px;
-  position: fixed;
-  top: 0; bottom: 0; right: 0;
-}
-
-/* -------- -------- -------- -------- */
-
-#section_sizes_graphic {
-  width: 5px;
-  position: fixed;
-  top: 0; bottom: 0; left: 0px;
-}
-
-/* -------- -------- -------- -------- */
-
 div.margin_bytes {
   position: absolute; top: 0px; left: -100px;
   width: 100px;
@@ -549,81 +386,18 @@ div.margin_bytes div.value {
 
 /* -------- -------- -------- -------- */
 
-span.byte_stream {
-  display:inline-block;
-  vertical-align: top;
-  margin: -2px 0 0;
-  color: hsla(0, 0%, 0%, 0.33);
+/* -------- -------- -------- -------- */
+
+#scrollgraph {
+  width: 11px;
+  position: fixed;
+  top: 0; bottom: 0; right: 0;
 }
 
-span.byte_stream_size {
-  color: hsla(0, 0%, 0%, 0.33);
-}
+/* -------- -------- -------- -------- */
 
-span.byte_stream b.byte {
-  display:inline-block;
-  opacity: 0.66;
-  vertical-align: middle;
-  margin: 0px 1px 0px 1px;
-  width: 9px;
-  height: 9px;
-  border-radius: 10px;
-  border: 2px solid hsl(0, 0%, 0%);
-  position:relative;
-  top: 0px;
-  transition: height 66ms linear;
-}
-span.byte_stream b.byte:hover {
-  height: 18px;
-  transition: height 0ms linear;
-}
-
-
-
-/* Colors -------- -------- -------- */
-
-#magic_bytes_section,
-#magic_bytes_section div.byte div.value,
-a.link_to_magic_bytes,
-#scrollgraph div.magic,
-#section_sizes_graphic div.magic {
-  background-color: hsl(300, 50%, 70%);
-}
-
-#size_of_header_section,
-#size_of_header_section div.byte div.value,
-a.link_to_size_of_header,
-#scrollgraph div.size_of_header,
-#section_sizes_graphic div.size_of_header {
-  background-color: hsl(250, 50%, 75%);
-}
-
-#header_section,
-#decrypt_summary pre.header,
-#header_section div.byte div.value,
-#unencrypted_summary b.header,
-a.link_to_header,
-#scrollgraph div.header,
-#section_sizes_graphic div.header {
-  background-color: hsl(200, 50%, 66%);
-}
-
-#ciphertext_section,
-#ciphertext_section div.byte div.value,
-a.link_to_ciphertext,
-#decrypt_summary pre.ciphertext,
-#unencrypted_summary b.ciphertext,
-#scrollgraph div.ciphertext,
-#section_sizes_graphic div.ciphertext {
-  background-color: hsl(150, 50%, 66%);
-}
-
-
-#decrypt_status.ok em,
-a.secret_key.selected.fits {
-  background-color: hsl(40, 90%, 66%);
-}
-#decrypt_status.failed em,
-a.secret_key.selected.jams {
-  background-color: hsl(350, 90%, 66%);
+#section_sizes_graphic {
+  width: 5px;
+  position: fixed;
+  top: 0; bottom: 0; left: 0px;
 }

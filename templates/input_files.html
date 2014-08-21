@@ -1,23 +1,23 @@
-<div id="input_files">
-  <div class="unencrypted input file">
-    <fieldset>
-      <img src="input_file_icon.svg">
-      <textarea>miniLock is file encryption software that does more with less.</textarea>
-    </fieldset>
+<div id="input_files" class="text_input_is_selected">
+  <div class="selected unencrypted text input file">
+    <img src="black_arrow.svg" class="arrow">
+    <img src="input_file_icon.svg" class="background">
+    <textarea autofocus maxlength="128">miniLock is file encryption software that does more with less.</textarea>
     <input type="text" name="name" value="Simple.txt">
+    <input type="hidden" name="type" value="text/plain">
   </div>
-  <img src="black_arrow.svg" class="first arrow">
   <div class="encrypted input file">
-    <div id="encrypted_by">
+    <img src="black_arrow.svg" class="second arrow">
+    <img src="input_file_icon.svg" class="background">
+    <div class="author">
       <label>Author:</label>
-      <select id="encrypted_by_input" name="keys">
+      <select class="author" name="keys">
         <option>Alice</option>
         <option>Bobby</option>
         <option>Sarah</option>
       </select>
     </div>
-    <fieldset>
-      <img src="input_file_icon.svg">
+    <fieldset class="permits">
       <legend>Permits:</legend>
       <div><label><input type="checkbox" name="minilock_ids" value="CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw" checked> Alice</label></div>
       <div><label><input type="checkbox" name="minilock_ids" value="2CtUp8U3iGykxaqyEDkGJjgZTsEtzzYQCd8NVmLspM4i2b" checked> Bobby</label></div>
@@ -26,5 +26,28 @@
     <input type="text" name="name" value="Secret.minilock">
     <input type="hidden" name="version" value="<%= @version %>">
   </div>
-  <img src="black_arrow.svg" class="second arrow">
+  <div class="blank unencrypted image input file">
+    <img src="black_arrow.svg" class="arrow">
+    <img src="input_file_icon.svg" class="background">
+    <div id="camera" class="closed">
+      <div class="status_indicator"></div>
+      <div class="cover"><img src="camera.svg"></div>
+      <div class="countdown"><a>3</a> <a>2</a> <a>1</a></div>
+      <button class="start" tabindex="-1"></button>
+      <button class="erase" tabindex="-1"><img src="clear_button.svg"></button>
+      <div id="viewfinder">
+        <img class="snap">
+        <video id="video" autoplay></video>
+        <div class="curtain"><img src="test_pattern.png"></div>
+        <div class="flash"></div>
+      </div>
+      <div id="notice_request_to_use_camera"></div>
+    </div>
+    <footer>
+      <select name="type" disabled>
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/png" selected>PNG</option>
+      </select>
+    </footer>
+  </div>
 </div>

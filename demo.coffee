@@ -1,27 +1,53 @@
 Base58 = miniLockLib.Base58
 
+window.encryptedBlobInput = undefined
 window.keys = characters.Alice
 
-$(document).ready (event) ->
-  makeMiniLockFileAndDecrypt (error) ->
-    if error
+decryptMiniLockFile = (blob) ->
+  blob = blob ? window.encryptedBlobInput
+  window.encryptedBlobInput = blob
+  console.info operation = new miniLockLib.DecryptOperation
+    data: blob
+    keys: window.keys
+  $(document).trigger("decrypt:start", [operation])
+  operation.start (error, decrypted, header, sizeOfHeader) ->
+    if (error)
       console.error(error)
+      $(document).trigger("decrypt:complete", [operation, decrypted, header, sizeOfHeader])
     else
-      $(document.body).removeClass("loading").addClass("ready")
-      $(location.hash).get(0).scrollIntoView() if location.hash
-      renderEncryptedInputFileArrow()
-      setupBookmarks()
+      reader = new FileReader
+      reader.readAsText(decrypted.data.slice(0, 100))
+      reader.onload = (event) ->
+        decrypted.text = reader.result
+        $(document).trigger("decrypt:complete", [operation, decrypted, header, sizeOfHeader])
 
-$(document).on "scroll", ->
+
+# Reveal the body, scroll location hash into view and setup bookmarks
+# when the first file is decrypted after the document ready event.
+$(document).one "decrypt:complete", (event) ->
+  $(document.body).removeClass("loading").addClass("ready")
+  $(location.hash).get(0).scrollIntoView() if location.hash
   renderEncryptedInputFileArrow()
+  setupBookmarks()
 
-$(document).on "input", "#input_files textarea, #input_files input[type=text]", (event) ->
-  makeMiniLockFileAndDecrypt.debounced (error) ->
-    console.error(error) if error
 
-$(document).on "change", "#input_files select, #input_files input[type=checkbox]", (event) ->
-  makeMiniLockFileAndDecrypt (error) ->
-    console.error(error) if error
+$(document).on "decrypt:start", (event, operation) ->
+  $('a.secret_key').removeClass("fits jams")
+  $('#decrypt_status > div:first-child').addClass('expired')
+
+
+$(document).on "decrypt:complete", (event, operation, decrypted, header, sizeOfHeader) ->
+  $("a.secret_key.selected").toggleClass("fits", decrypted?)
+  $("a.secret_key.selected").toggleClass("jams", decrypted is undefined)
+  renderDecryptedFile(operation, decrypted, header, sizeOfHeader)
+  renderMarginBytesForEachSection operation, sizeOfHeader, (error) ->
+    console.error(error) if (error)
+
+
+$(document).on "change:blob", "#input_files div.encrypted.file.input", (event, blob, attributes) ->
+  window.encryptedBlobInput = blob
+  decryptMiniLockFile(blob)
+
 
 $(document).on "mousedown", "a.secret_key", (event) ->
   name = $(event.currentTarget).data('name')
@@ -29,16 +55,18 @@ $(document).on "mousedown", "a.secret_key", (event) ->
     window.keys = window.characters[name]
     $('a.secret_key').removeClass("selected")
     $(event.currentTarget).addClass("selected")
-    decryptMiniLockFile undefined, keys, (error) ->
-      $(event.currentTarget).toggleClass("fits", error is undefined)
-      $(event.currentTarget).toggleClass("jams", error?)
-      console.error(error) if error
+    decryptMiniLockFile()
+
 
 $(document).ready (event) ->
   $("#decrypt_keys").render
     aliceKeyHTML: renderByteStream characters.Alice.secretKey
     bobbyKeyHTML: renderByteStream characters.Bobby.secretKey
     sarahKeyHTML: renderByteStream characters.Sarah.secretKey
+
+
+$(document).on "scroll", -> renderEncryptedInputFileArrow()
+
 
 setupBookmarks = ->
   bookmarks = $('section h1 a').toArray().reverse()
@@ -53,51 +81,6 @@ setupBookmarks = ->
       window.hashOffset = window.scrollY - $(location.hash).offset().top
     else
       window.hashOffset = 0
-
-makeMiniLockFileAndDecrypt = (done) ->
-  $('a.secret_key').removeClass("fits jams")
-  $('#decrypt_status > div:first-child').addClass('expired')
-  async.waterfall [
-    (ƒ) -> makeMiniLockFile(ƒ)
-    (file, ƒ) -> decryptMiniLockFile(file, undefined, ƒ)
-  ], (error) ->
-    $("a.secret_key.selected").toggleClass("fits", error is undefined)
-    $("a.secret_key.selected").toggleClass("jams", error?)
-    done(error)
-
-makeMiniLockFileAndDecrypt.debounced = _.debounce(makeMiniLockFileAndDecrypt, 500)
-
-makeMiniLockFile = (callback) ->
-  unencryptedFileInput = '#input_files div.unencrypted.file.input'
-  encryptedFileInput   = '#input_files div.encrypted.file.input'
-  miniLockLib.encrypt
-    version: Number $("#{encryptedFileInput} input[name=version]").val()
-    data: new Blob([$("#{unencryptedFileInput} textarea").val()])
-    name: $("#{unencryptedFileInput} input[name=name]").val()
-    type: "text/plain"
-    keys: window.characters[$("#{encryptedFileInput} select[name=keys]").val()]
-    miniLockIDs: $('input[name=minilock_ids]:checked').map((i, el) -> el.value).toArray()
-    callback: (error, encrypted) ->
-      if encrypted
-        callback(error, encrypted.data)
-      else
-        console.error("makeMiniLockFile", "Error making encrypted file!")
-        callback(error)
-
-decryptMiniLockFile = (file, keys, callback) ->
-  $('#decrypt_status > div:first-child').addClass('expired')
-  offset = window.hashOffset
-  window.miniLockFile = file if file
-  window.keys = keys if keys
-  file = window.miniLockFile
-  keys = window.keys
-  operation = new miniLockLib.DecryptOperation
-    data: file
-    keys: keys
-  operation.start (error, decrypted, header, sizeOfHeader) ->
-    renderDecryptedFile(operation, decrypted, header, sizeOfHeader)
-    renderMarginBytesForEachSection operation, sizeOfHeader, ->
-      callback(error)
 
 renderDecryptedFile = (operation, decrypted, header, sizeOfHeader) ->
   renderIntroduction(operation, decrypted, header, sizeOfHeader)
@@ -133,10 +116,12 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   $('#decrypt_summary').toggleClass("empty", decrypted is undefined)
   $("#summary_of_decrypted_ciphertext").render
     version: header.version
+    size: decrypted?.data.size
     name: decrypted?.name
     type: decrypted?.type
     time: decrypted?.time
-    data: if decrypted? then $("div.unencrypted.input.file textarea").val() else undefined
+    text: decrypted?.text
+    url: if decrypted? and decrypted.type?.match("image/") then URL.createObjectURL(decrypted.data) else undefined
   $("#summary_of_decrypted_header").render
     authorName: (characters.find(decrypted.senderID).name if decrypted?)
     headerSenderID: decrypted?.senderID
@@ -300,7 +285,7 @@ renderByteStream = (u8intArray) ->
 
 renderEncryptedInputFileArrow = ->
   isExtended = -30 > ($('#input_files').offset().top - $('#magic_bytes').offset().top)
-  $('#input_files > img.arrow').toggleClass("extended", isExtended)
+  $('#input_files img.second.arrow').toggleClass("extended", isExtended)
 
 numberToByteArray = (n) ->
   byteArray = new Uint8Array(4)

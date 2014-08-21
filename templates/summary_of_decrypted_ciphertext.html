@@ -1,4 +1,23 @@
-Blob Data:     <%- @data %>
-File Name:     <%- @name %><% if @version is 2: %>
-Media Type:    <%- @type %>
-Encrypt Time:  <%- @time %><% end %>
+<% if @type?.match "image/": %>
+<div class="image">
+  <img src="<%- @url %>" height="110" width="110">
+</div>
+<% else: %>
+<div class="text">
+  <%= @text %>
+</div>
+<% end %>
+
+<% if @version is 1: %><pre class="ciphertext">
+
+
+File Name:    <%- @name %>
+File Size:    <%- "#{@size} bytes" if @size %>
+</pre><% end %>
+
+<% if @version is 2: %><pre class="ciphertext">
+File Name:    <%- @name %>
+File Size:    <%- "#{@size} bytes" if @size %>
+Media Type:   <%- @type %>
+Encrypt Time: <%- @time %>
+</pre><% end %>

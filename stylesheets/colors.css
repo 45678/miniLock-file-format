@@ -1,0 +1,53 @@
+a:link    { color: hsl(0, 0%, 50%);     }
+a:visited { color: hsl(275, 100%, 25%); }
+
+#magic_bytes_section,
+#magic_bytes_section div.byte div.value,
+nav a[href="#magic_bytes"],
+#scrollgraph div.magic,
+#section_sizes_graphic div.magic,
+#viewfinder div.curtain div.magic_bytes {
+  background-color: hsl(300, 50%, 70%);
+}
+
+#size_of_header_section,
+#size_of_header_section div.byte div.value,
+nav a[href="#size_of_header"],
+#scrollgraph div.size_of_header,
+#section_sizes_graphic div.size_of_header,
+#viewfinder div.curtain div.size_of_header {
+  background-color: hsl(250, 50%, 75%);
+}
+
+#header_section,
+#decrypt_summary div.header,
+#header_section div.byte div.value,
+#unencrypted_summary b.header,
+nav a[href="#header"],
+#scrollgraph div.header,
+#section_sizes_graphic div.header,
+#viewfinder div.curtain div.header {
+  background-color: hsl(200, 50%, 66%);
+}
+
+#ciphertext_section,
+#ciphertext_section div.byte div.value,
+nav a[href="#ciphertext"],
+#decrypt_summary div.ciphertext,
+#unencrypted_summary b.ciphertext,
+#scrollgraph div.ciphertext,
+#section_sizes_graphic div.ciphertext,
+#viewfinder div.curtain div.ciphertext {
+  background-color: hsl(150, 50%, 66%);
+}
+
+#decrypt_status.ok em,
+a.secret_key.selected.fits {
+  background-color: hsl(40, 90%, 66%);
+}
+
+#decrypt_status.failed em,
+#viewfinder div.curtain div.introduction,
+a.secret_key.selected.jams {
+  background-color: hsl(350, 90%, 66%);
+}

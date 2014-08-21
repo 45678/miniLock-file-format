@@ -5,6 +5,7 @@
   "main": "2.html",
   "dependencies": {
     "async": "^0.9.0",
+    "blueimp-canvas-to-blob": "^2.1.0",
     "coffee-script": "^1.7.1",
     "eco": "^1.1.0-rc-3",
     "miniLockLib": "^0.0.0",

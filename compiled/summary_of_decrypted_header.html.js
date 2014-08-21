@@ -39,27 +39,27 @@
     }
     (function() {
       (function() {
-        __out.push('Author is:     ');
+        __out.push('<pre>\nAuthor is:    ');
       
         __out.push(__sanitize(this.authorName));
       
-        __out.push('\nAuthor ID:     ');
+        __out.push('\nAuthor ID:    ');
       
         __out.push(__sanitize(this.headerSenderID));
       
-        __out.push('\nFile Key:      ');
+        __out.push('\nFile Key:     ');
       
         __out.push(this.headerFileKeyHTML);
       
-        __out.push('\nFile Nonce:    ');
+        __out.push('\nFile Nonce:   ');
       
         __out.push(this.headerFileNonceHTML);
       
-        __out.push('\nFile Hash:     ');
+        __out.push('\nFile Hash:    ');
       
         __out.push(this.headerFileHashHTML);
       
-        __out.push('\n');
+        __out.push('\n</pre>\n');
       
       }).call(this);
       

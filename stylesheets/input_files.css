@@ -1,0 +1,156 @@
+#input_files {
+  position: fixed;
+  top: 280px;
+  left: 15px;
+  width: 205px;
+  height: 320px;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+
+
+#input_files div.unencrypted.file.input img.arrow {
+  left: 5px;
+  transition: left 300ms linear;
+}
+#input_files div.unencrypted.file.input.selected img.arrow {
+  left: 45px;
+  transition: left 300ms linear 450ms;
+}
+
+
+
+
+/* File inputs */
+
+#input_files div.file.input {
+  position: absolute;
+  width: 96px;
+  height: 120px;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+#input_files img.arrow {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -6px;
+  margin-left: -2px;
+  opacity: 0.25;
+  z-index: -1;
+}
+
+#input_files div.file.input img.background {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+}
+
+div.file.input input[name=name] {
+  position: absolute;
+  bottom: -20px;
+  width: 150%;
+  margin-left: -25%;
+  margin-right: -25%;
+  text-align: center;
+}
+
+
+
+#input_files > div.unencrypted.file.input {
+  left: 0;
+}
+#input_files > div.encrypted.file.input {
+  right: 0;
+}
+
+#input_files.text_input_is_selected div.encrypted.file.input {
+  top: 0px;
+  transition: top 300ms ease-out;
+}
+#input_files.image_input_is_selected div.encrypted.file.input {
+  top: 160px;
+  transition: top 300ms ease-out;
+}
+
+
+/* Text file input */
+
+div.file.input textarea {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: none;
+  outline: none;
+  padding: 8px 10px 4px;
+  margin: auto;
+  resize: none;
+}
+
+/* Image file input */
+
+div.unencrypted.image.file.input {
+  top: 160px;
+}
+
+div.unencrypted.image.file.input footer {
+  position:absolute;
+  bottom: -20px;
+  left: 0; right: 0;
+}
+
+div.unencrypted.image.file.input select[name=type] {
+  display: block;
+  margin: 0 auto;
+}
+
+div.unencrypted.image.file.input #camera {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+/* Encrypted file input */
+
+#input_files div.encrypted.file img.arrow {
+  left: 45px;
+}
+
+#input_files div.encrypted.file img.arrow.extended {
+  left: 90px;
+  transition: left 150ms ease-out 300ms;
+}
+
+#input_files div.encrypted.file div.author {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 8px;
+  z-index: 2;
+}
+
+#input_files div.encrypted.file select.author {
+  margin: 0 -3px;
+  display: block;
+  width: 100%;
+  font: inherit;
+}
+
+#input_files div.encrypted.file fieldset.permits {
+  position: absolute;
+  top: 68px; left: 10px; right: 10px; bottom: 10px;
+}
+
+#input_files div.encrypted.file fieldset.permits legend {
+  position: absolute;
+  top: -16px;
+  padding: 0;
+  margin: 0;
+}
+
+#input_files div.encrypted.file fieldset.permits input[type=checkbox] {
+  margin: 0 -3px 0 0;
+}

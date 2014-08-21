@@ -1,43 +1,65 @@
 (function() {
-  var Base58, decryptMiniLockFile, defer, makeMiniLockFile, makeMiniLockFileAndDecrypt, numberToByteArray, renderByteStream, renderCiphertext, renderDecryptStatus, renderDecryptedFile, renderEncryptedInputFileArrow, renderHeader, renderIntroduction, renderMagicBytes, renderMarginBytes, renderMarginBytesForEachSection, renderScrollGraph, renderSectionSizeGraphic, renderSizeOfHeader, setupBookmarks;
+  var Base58, decryptMiniLockFile, defer, numberToByteArray, renderByteStream, renderCiphertext, renderDecryptStatus, renderDecryptedFile, renderEncryptedInputFileArrow, renderHeader, renderIntroduction, renderMagicBytes, renderMarginBytes, renderMarginBytesForEachSection, renderScrollGraph, renderSectionSizeGraphic, renderSizeOfHeader, setupBookmarks;
 
   Base58 = miniLockLib.Base58;
 
+  window.encryptedBlobInput = void 0;
+
   window.keys = characters.Alice;
 
-  $(document).ready(function(event) {
-    return makeMiniLockFileAndDecrypt(function(error) {
+  decryptMiniLockFile = function(blob) {
+    var operation;
+    blob = blob != null ? blob : window.encryptedBlobInput;
+    window.encryptedBlobInput = blob;
+    console.info(operation = new miniLockLib.DecryptOperation({
+      data: blob,
+      keys: window.keys
+    }));
+    $(document).trigger("decrypt:start", [operation]);
+    return operation.start(function(error, decrypted, header, sizeOfHeader) {
+      var reader;
       if (error) {
-        return console.error(error);
+        console.error(error);
+        return $(document).trigger("decrypt:complete", [operation, decrypted, header, sizeOfHeader]);
       } else {
-        $(document.body).removeClass("loading").addClass("ready");
-        if (location.hash) {
-          $(location.hash).get(0).scrollIntoView();
-        }
-        renderEncryptedInputFileArrow();
-        return setupBookmarks();
+        reader = new FileReader;
+        reader.readAsText(decrypted.data.slice(0, 100));
+        return reader.onload = function(event) {
+          decrypted.text = reader.result;
+          return $(document).trigger("decrypt:complete", [operation, decrypted, header, sizeOfHeader]);
+        };
       }
     });
+  };
+
+  $(document).one("decrypt:complete", function(event) {
+    $(document.body).removeClass("loading").addClass("ready");
+    if (location.hash) {
+      $(location.hash).get(0).scrollIntoView();
+    }
+    renderEncryptedInputFileArrow();
+    return setupBookmarks();
   });
 
-  $(document).on("scroll", function() {
-    return renderEncryptedInputFileArrow();
+  $(document).on("decrypt:start", function(event, operation) {
+    $('a.secret_key').removeClass("fits jams");
+    return $('#decrypt_status > div:first-child').addClass('expired');
   });
 
-  $(document).on("input", "#input_files textarea, #input_files input[type=text]", function(event) {
-    return makeMiniLockFileAndDecrypt.debounced(function(error) {
+  $(document).on("decrypt:complete", function(event, operation, decrypted, header, sizeOfHeader) {
+    $("a.secret_key.selected").toggleClass("fits", decrypted != null);
+    $("a.secret_key.selected").toggleClass("jams", decrypted === void 0);
+    renderDecryptedFile(operation, decrypted, header, sizeOfHeader);
+    return renderMarginBytesForEachSection(operation, sizeOfHeader, function(error) {
       if (error) {
         return console.error(error);
       }
     });
   });
 
-  $(document).on("change", "#input_files select, #input_files input[type=checkbox]", function(event) {
-    return makeMiniLockFileAndDecrypt(function(error) {
-      if (error) {
-        return console.error(error);
-      }
-    });
+  $(document).on("change:blob", "#input_files div.encrypted.file.input", function(event, blob, attributes) {
+    window.encryptedBlobInput = blob;
+    return decryptMiniLockFile(blob);
   });
 
   $(document).on("mousedown", "a.secret_key", function(event) {
@@ -47,13 +69,7 @@
       window.keys = window.characters[name];
       $('a.secret_key').removeClass("selected");
       $(event.currentTarget).addClass("selected");
-      return decryptMiniLockFile(void 0, keys, function(error) {
-        $(event.currentTarget).toggleClass("fits", error === void 0);
-        $(event.currentTarget).toggleClass("jams", error != null);
-        if (error) {
-          return console.error(error);
-        }
-      });
+      return decryptMiniLockFile();
     }
   });
 
@@ -63,6 +79,10 @@
       bobbyKeyHTML: renderByteStream(characters.Bobby.secretKey),
       sarahKeyHTML: renderByteStream(characters.Sarah.secretKey)
     });
+  });
+
+  $(document).on("scroll", function() {
+    return renderEncryptedInputFileArrow();
   });
 
   setupBookmarks = function() {
@@ -87,72 +107,6 @@
     });
   };
 
-  makeMiniLockFileAndDecrypt = function(done) {
-    $('a.secret_key').removeClass("fits jams");
-    $('#decrypt_status > div:first-child').addClass('expired');
-    return async.waterfall([
-      function(ƒ) {
-        return makeMiniLockFile(ƒ);
-      }, function(file, ƒ) {
-        return decryptMiniLockFile(file, void 0, ƒ);
-      }
-    ], function(error) {
-      $("a.secret_key.selected").toggleClass("fits", error === void 0);
-      $("a.secret_key.selected").toggleClass("jams", error != null);
-      return done(error);
-    });
-  };
-
-  makeMiniLockFileAndDecrypt.debounced = _.debounce(makeMiniLockFileAndDecrypt, 500);
-
-  makeMiniLockFile = function(callback) {
-    var encryptedFileInput, unencryptedFileInput;
-    unencryptedFileInput = '#input_files div.unencrypted.file.input';
-    encryptedFileInput = '#input_files div.encrypted.file.input';
-    return miniLockLib.encrypt({
-      version: Number($("" + encryptedFileInput + " input[name=version]").val()),
-      data: new Blob([$("" + unencryptedFileInput + " textarea").val()]),
-      name: $("" + unencryptedFileInput + " input[name=name]").val(),
-      type: "text/plain",
-      keys: window.characters[$("" + encryptedFileInput + " select[name=keys]").val()],
-      miniLockIDs: $('input[name=minilock_ids]:checked').map(function(i, el) {
-        return el.value;
-      }).toArray(),
-      callback: function(error, encrypted) {
-        if (encrypted) {
-          return callback(error, encrypted.data);
-        } else {
-          console.error("makeMiniLockFile", "Error making encrypted file!");
-          return callback(error);
-        }
-      }
-    });
-  };
-
-  decryptMiniLockFile = function(file, keys, callback) {
-    var offset, operation;
-    $('#decrypt_status > div:first-child').addClass('expired');
-    offset = window.hashOffset;
-    if (file) {
-      window.miniLockFile = file;
-    }
-    if (keys) {
-      window.keys = keys;
-    }
-    file = window.miniLockFile;
-    keys = window.keys;
-    operation = new miniLockLib.DecryptOperation({
-      data: file,
-      keys: keys
-    });
-    return operation.start(function(error, decrypted, header, sizeOfHeader) {
-      renderDecryptedFile(operation, decrypted, header, sizeOfHeader);
-      return renderMarginBytesForEachSection(operation, sizeOfHeader, function() {
-        return callback(error);
-      });
-    });
-  };
-
   renderDecryptedFile = function(operation, decrypted, header, sizeOfHeader) {
     renderIntroduction(operation, decrypted, header, sizeOfHeader);
     renderDecryptStatus(operation, decrypted);
@@ -165,7 +119,7 @@
   };
 
   renderIntroduction = function(operation, decrypted, header, sizeOfHeader) {
-    var encodedEncryptedPermit, encodedNonce, encryptedPermits;
+    var encodedEncryptedPermit, encodedNonce, encryptedPermits, _ref;
     if (header != null ? header.decryptInfo : void 0) {
       encryptedPermits = (function() {
         var _ref, _results;
@@ -200,10 +154,12 @@
     $('#decrypt_summary').toggleClass("empty", decrypted === void 0);
     $("#summary_of_decrypted_ciphertext").render({
       version: header.version,
+      size: decrypted != null ? decrypted.data.size : void 0,
       name: decrypted != null ? decrypted.name : void 0,
       type: decrypted != null ? decrypted.type : void 0,
       time: decrypted != null ? decrypted.time : void 0,
-      data: decrypted != null ? $("div.unencrypted.input.file textarea").val() : void 0
+      text: decrypted != null ? decrypted.text : void 0,
+      url: (decrypted != null) && ((_ref = decrypted.type) != null ? _ref.match("image/") : void 0) ? URL.createObjectURL(decrypted.data) : void 0
     });
     return $("#summary_of_decrypted_header").render({
       authorName: (decrypted != null ? characters.find(decrypted.senderID).name : void 0),
@@ -441,7 +397,7 @@
   renderEncryptedInputFileArrow = function() {
     var isExtended;
     isExtended = -30 > ($('#input_files').offset().top - $('#magic_bytes').offset().top);
-    return $('#input_files > img.arrow').toggleClass("extended", isExtended);
+    return $('#input_files img.second.arrow').toggleClass("extended", isExtended);
   };
 
   numberToByteArray = function(n) {

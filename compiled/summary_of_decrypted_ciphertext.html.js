@@ -39,19 +39,44 @@
     }
     (function() {
       (function() {
-        __out.push('Blob Data:     ');
+        var _ref;
       
-        __out.push(this.data);
+        if ((_ref = this.type) != null ? _ref.match("image/") : void 0) {
+          __out.push('\n<div class="image">\n  <img src="');
+          __out.push(this.url);
+          __out.push('" height="110" width="110">\n</div>\n');
+        } else {
+          __out.push('\n<div class="text">\n  ');
+          __out.push(__sanitize(this.text));
+          __out.push('\n</div>\n');
+        }
       
-        __out.push('\nFile Name:     ');
+        __out.push('\n\n');
       
-        __out.push(this.name);
+        if (this.version === 1) {
+          __out.push('<pre class="ciphertext">\n\n\nFile Name:    ');
+          __out.push(this.name);
+          __out.push('\nFile Size:    ');
+          if (this.size) {
+            __out.push("" + this.size + " bytes");
+          }
+          __out.push('\n</pre>');
+        }
+      
+        __out.push('\n\n');
       
         if (this.version === 2) {
-          __out.push('\nMedia Type:    ');
+          __out.push('<pre class="ciphertext">\nFile Name:    ');
+          __out.push(this.name);
+          __out.push('\nFile Size:    ');
+          if (this.size) {
+            __out.push("" + this.size + " bytes");
+          }
+          __out.push('\nMedia Type:   ');
           __out.push(this.type);
-          __out.push('\nEncrypt Time:  ');
+          __out.push('\nEncrypt Time: ');
           __out.push(this.time);
+          __out.push('\n</pre>');
         }
       
         __out.push('\n');

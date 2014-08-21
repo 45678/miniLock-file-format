@@ -1,0 +1,329 @@
+/*
+
+
+When the camera is `closed`:
+  The `cover` is on.
+  Its `viewfinder`, `image` and `countdown` are invisible.
+
+When the camera is `activating` and `closed`
+  The `cover` is green.
+  Its `viewfinder`, `image` and `countdown` are invisible.
+
+When the camera is `open`
+  The `cover` shrinks into the status indicator.
+  Its status indicator, viewfinder, image and countdown are visible.
+
+When the camera is `open` and `activated`
+  Its status indicator, viewfinder and countdown are visible.
+  The blank image is invisible.
+
+When the camera is `open` and `snapped`
+  The snapped image is visible.
+  The erase button is visible.
+  Its cover, status indicator, viewfinder and countdown are invisible.
+
+When the camera is `open` and `erased`
+  Its cover recovers from bottom center origin.
+  The snapped image is invisible.
+  The erase button is invisible.
+  The status indicator, viewfinder and countdown are invisible.
+
+*/
+
+#camera * {
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+/* -------- -------- -------- --------  */
+
+#camera button.start {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  border: none; padding: 0; margin: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  outline: 0;
+  z-index: 1;
+}
+#camera.open button.start {
+  visibility: hidden;
+}
+/* -------- -------- -------- --------  */
+
+#camera div.cover {
+  position: absolute;
+  border-radius: 120px;
+  border: 2px solid hsla(0, 0%, 0%, 0.33);
+  /*transition: all 400ms ease-out 500ms, visibility 0ms linear, border 0ms linear;*/
+}
+#camera.closed div.cover {
+  left: 6px; top: 18px;
+  width: 84px; height: 84px;
+  border-color: hsla(0, 0%, 0%, 0.33);
+  transition: all 300ms ease-out, border-color 1ms linear;
+}
+#camera.closed:hover div.cover {
+  border-color: hsla(150, 100%, 33%, 0.66);
+}
+#camera.closed.activating div.cover {
+  background-color: hsla(150, 50%, 66%, 1);
+  border-color: hsla(150, 100%, 33%, 0.66);
+  transition: none;
+}
+#camera.activated div.cover {
+  background-color: hsla(150, 50%, 66%, 1);
+  border-color: hsla(150, 100%, 33%, 0.66);
+  left: 44px; top: -10px;
+  width: 8px; height: 8px;
+  visibility: hidden;
+  transition: all 250ms ease-in, visibility 1ms linear 250ms;
+}
+#camera.open.snapped div.cover {
+  left: 38px; top: 96px;
+  width: 20px; height: 20px;
+  border-color: hsla(0, 0%, 0%, 0.33);
+  visibility: hidden;
+  transition: none;
+}
+#camera.open.snapped div.cover,
+#camera.open.erased div.cover {
+  left: 38px; top: 96px;
+  width: 20px; height: 20px;
+  border-color: hsla(0, 0%, 0%, 0.33);
+  visibility: visible;
+  transition: none;
+}
+
+#camera div.cover img {
+  display: block;
+  position: absolute;
+  width: 100%; height: 100%;
+}
+#camera.closed div.cover img {
+  opacity: 0.5;
+  transition: opacity 600ms linear 300ms;
+}
+#camera.closed.activated div.cover img,
+#camera.open div.cover img {
+  opacity: 0;
+  transition: opacity 250ms linear;
+}
+
+/* -------- -------- -------- --------  */
+
+#camera div.status_indicator {
+  background-color: hsla(150, 50%, 66%, 1);
+  border: 2px solid black;
+  border-radius: 12px;
+  border-color: hsla(150, 100%, 25%, 1);
+  left: 44px; top: -10px;
+  width: 8px; height: 8px;
+}
+#camera.closed div.status_indicator {
+  opacity: 0;
+}
+#camera.closed.activated div.status_indicator,
+#camera.open.activated div.status_indicator {
+  opacity: 1;
+  transition: opacity 1ms linear 250ms;
+}
+#camera.open.snapped div.status_indicator {
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+#camera.open.erased div.status_indicator {
+  opacity: 0;
+  transition: none;
+}
+
+/* -------- -------- -------- --------  */
+
+#camera #viewfinder {
+  box-sizing: content-box;
+  position: absolute;
+  box-shadow: 0px 0px 5px hsla(0, 0%, 0%, 0.33);
+  border: 2px solid white;
+  overflow: hidden;
+}
+#camera.closed #viewfinder,
+#camera.open.erased #viewfinder {
+  top: 58px; left: 46px;
+  width: 0px; height: 0px;
+  opacity: 0;
+  transition: all 300ms ease-in-out;
+}
+#camera.closed.activated #viewfinder,
+#camera.open #viewfinder {
+  top: 4px; left: 4px;
+  width: 84px; height: 84px;
+  opacity: 1;
+  transition: all 300ms ease-in-out 150ms;
+}
+
+
+#camera #viewfinder div.curtain {
+  position: absolute;
+  top: 0; right: 0; left: 0; bottom: 0;
+}
+#camera.open #viewfinder div.curtain {
+  opacity: 0;
+  transition: opacity 150ms linear 300ms;
+}
+#camera #viewfinder div.curtain img {
+  position: absolute;
+  display: block;
+  width: 100%; height: 100%;
+}
+
+#camera #viewfinder video {
+  display: block;
+  position: absolute;
+  left: -11px; top: 0;
+  height: 84px; width: 112px;
+}
+#camera.snapped #viewfinder video,
+#camera.erased #viewfinder video {
+  visibility: hidden;
+}
+
+#camera #viewfinder img.snap {
+  position: absolute;
+  display: block;
+  width: 100%; height: 100%;
+}
+
+/* -------- -------- -------- --------  */
+
+#camera div.countdown {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 4px;
+  text-align: center;
+}
+#camera.closed div.countdown {
+  opacity: 0;
+}
+#camera.closed.activated div.countdown {
+  opacity: 1;
+  transition: opacity 300ms linear;
+}
+#camera.open.snapped div.countdown,
+#camera.open.erased div.countdown {
+  visibility: hidden;
+  transition: visibility 1ms linear 900ms;
+}
+
+#camera div.countdown a {
+  text-align:center;
+  display: inline-block;
+  background-color: hsla(0, 0%, 66%, 1);
+  color: hsla(0, 0%, 80%, 1);
+  border-radius: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 16px;
+  border: 2px solid transparent;
+  margin: 0px -1px;
+  box-sizing: border-box;
+}
+#camera div.countdown a.current {
+  background-color: hsl(350, 100%, 66%);
+  border-color: hsla(0, 0%, 0%, 0.33);
+  color: hsla(0, 0%, 100%, 0.9);
+  font-weight: bold;
+  transition: none;
+}
+#camera div.countdown a.expired {
+  background-color: hsla(0, 0%, 66%, 1);
+  color: hsla(0, 0%, 80%, 1);
+  border-color: transparent;
+  color: transparent;
+  transition: all 300ms ease-out;
+}
+#camera.flash div.countdown a.expired {
+  color: transparent;
+  border-color: hsla(0, 0%, 0%, 0.33);
+  transition: none;
+}
+#camera.flash div.countdown a.expired:nth-child(1) {
+  background-color: hsl(350, 100%, 66%);
+}
+#camera.flash div.countdown a.expired:nth-child(2) {
+  background-color: hsl(150, 100%, 66%);
+}
+#camera.flash div.countdown a.expired:nth-child(3) {
+  background-color: hsl(200, 100%, 66%);
+}
+#camera.snapped div.countdown a.expired {
+  color: transparent;
+  background-color: transparent;
+  border-color: transparent;
+  transition: all 900ms ease-in;
+}
+
+/* -------- -------- -------- --------  */
+
+#camera div.flash {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: white;
+  opacity: 0;
+}
+#camera.flash div.flash {
+  opacity: 0.5;
+  transition: none;
+}
+#camera.snapped div.flash {
+  opacity: 0;
+  transition: opacity 450ms linear;
+}
+
+/* -------- -------- -------- --------  */
+
+#camera button.erase {
+  display: block;
+  position: absolute;
+  bottom: 4px;
+  width: 20px;
+  height: 20px;
+  left: 38px;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border-radius: 20px;
+  outline: none;
+  background: transparent;
+  text-align: center;
+  visibility: hidden;
+}
+#camera.snapped button.erase {
+  visibility: visible;
+}
+
+#camera button.erase img {
+  opacity: 0;
+  width: 16px;
+  height: 16px;
+}
+#camera.snapped button.erase img {
+  opacity: 0.33;
+  transition: opacity 150ms linear 900ms;
+}
+
+/* -------- -------- -------- --------  */
+
+#notice_request_to_use_camera {
+  background: hsla(150, 100%, 33%, 1);
+  border-bottom: 1px dotted hsla(0, 0%, 0%, 0.5);
+  position: fixed;
+  top: -15px; left: 0; right: 0;
+  height: 0px;
+  height: 15px;
+}
+#notice_request_to_use_camera.activated {
+  top: 0;
+}
