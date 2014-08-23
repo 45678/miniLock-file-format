@@ -1,6 +1,7 @@
 SCRIPTS = \
 	compiled/miniLockLib.js \
 	compiled/async.js \
+	compiled/canvas-to-blob.js \
 	compiled/underscore.js \
 	compiled/zepto.min.js \
 	compiled/camera.js \
@@ -35,6 +36,9 @@ compiled/miniLockLib.js:
 
 compiled/async.js:
 	cp node_modules/async/lib/async.js $@
+
+compiled/canvas-to-blob.js:
+	cp node_modules/blueimp-canvas-to-blob/js/canvas-to-blob.js $@
 
 compiled/underscore.js:
 	cp node_modules/underscore/underscore.js $@
