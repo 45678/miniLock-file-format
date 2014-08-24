@@ -1,9 +1,8 @@
-File Name:        <%= @miniLockFileName %>
+miniLock Version: <div class="version"><%= @version %></div>
 File Size:
 Header Size:
-Ciphertext Size:  
-miniLock Version: <%= @version %>
-Ephemeral Key:    <%- @ephemeralKeyHTML %>
+Ciphertext Size:
+Ephemeral Key:    <div class="emphemeral"><%- @ephemeralKeyHTML %></div>
 Decrypt Info:     <span class="punctuation">{<%= "}" if @encryptedPermits.length is 0 %></span>
 <% for permit in @encryptedPermits: %>  <%- permit.nonceHTML %>: <span class="encoded_permit"><%= permit.encoded.substr(0, 36) %>...</span>
 <% end %><% if @encryptedPermits.length isnt 0: %><span class="punctuation">}</span><% end %>

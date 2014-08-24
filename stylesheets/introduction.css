@@ -36,79 +36,89 @@
   min-height: 340px;
 }
 
-#unencrypted_summary #minilock_file_size_graphic {
+
+#minilock_file_summary svg {
   position: absolute;
-  display:block;
-  top: 35px; left: 210px; right: 150px;
-  /*z-index: 1;*/
-
-  height: 90px;
-
+  top: 0px; left: 236px;
+  z-index: 0;
 }
-
-#minilock_file_size_graphic svg {
-  position: absolute;
-  top: 0; left: 0;
-}
-#minilock_file_size_graphic g.tick line {
+#minilock_file_summary g.tick line {
   stroke: hsla(0, 0%, 0%, 0.15);
   stroke-width: 1;
   shape-rendering: crispEdges;
 }
-#minilock_file_size_graphic g.tick text {
+#minilock_file_summary g.tick text {
   visibility: hidden;
 }
 
-#minilock_file_size_graphic g.x.axis path.domain {
+#minilock_file_summary g.x.axis path.domain {
   display: none;
 }
 
-#minilock_file_size_graphic #minilock_file_size {
-  position: absolute;
-  left: 100%;
-  top: 0px;
-  width: 140px;
+dl.minilock_file_summary {
+  margin: 0; padding: 0;
+  border-left: 1px dotted hsla(0, 0%, 0%, 0.33);
 }
 
-
-
-#minilock_file_size_graphic div.bar label {
+dl.minilock_file_summary dt {
   position: absolute;
-  background: hsl(0, 0%, 80%);
-  left: 100%;
-  padding-left: 5px;
-  width: 1000px;
-  z-index: 1;
-  white-space: nowrap;
+  margin: 0; padding-left: 9px;
 }
-
-#minilock_file_size_graphic div.bar {
-  /*border: 1px dotted hsla(0, 0%, 0%, 0.5);*/
+dl.minilock_file_summary dd {
+  margin: 0; padding: 0;
+  margin-left: 236px;
+  min-height: 30px;
+  overflow:hidden;
+}
+dl.minilock_file_summary dd.size {
+  border-top: 3px solid hsl(0, 0%, 66%);
+  border-bottom: 2px solid hsl(0, 0%, 66%);
+  line-height: 25px;
   height: 30px;
-  width: 0px;
-  transition: width 1s ease-out;
+  box-sizing: border-box;
 }
 
-#minilock_file_size_graphic div.file {
-  position:absolute;
-  top: 0px;
-  left: 0px;
+dl.minilock_file_summary dd.decrypt_info {
+  min-height: 90px;
+  color: hsla(0, 0%, 0%, 0.33);
+}
+dl.minilock_file_summary dd.decrypt_info div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+dl.minilock_file_summary label,
+dl.minilock_file_summary span.encoded_permit {
+  color: hsla(0, 0%, 0%, 0.33);
   background: hsl(0, 0%, 66%);
 }
 
-#minilock_file_size_graphic div.header {
-  position:absolute;
-  top: 30px;
-  left: 0px;
 
+#minilock_file_summary dd.size label {
+  position: absolute;
+  display:block;
+  left: 0;
+  padding-left: 5px;
+  width: 1000px;
+  z-index: 2;
+  white-space: nowrap;
+  background: hsl(0, 0%, 66%);
+  transition: left 1s ease-out;
 }
 
-#minilock_file_size_graphic div.ciphertext {
+#minilock_file_summary div.bar {
+  /*border: 1px dotted hsla(0, 0%, 0%, 0.5);*/
+  height: 25px;
+  width: 0px;
+  transition: width 1s ease-out;
   position:absolute;
-  top: 60px;
+  top: 0px;
   left: 0px;
-
+  background: hsl(0, 0%, 50%);
+  z-index: -1;
 }
+
 
 /* -------- -------- -------- -------- */
 
@@ -140,7 +150,7 @@
   height: 270px;
 }
 #decrypt_summary pre {
-  margin-left: 238px;
+  margin-left: 236px;
 }
 #decrypt_summary div.ciphertext pre {
   height: 130px;
@@ -152,19 +162,19 @@
   z-index: 1;
   left: 0px;
   top: 0px;
-  width: 240px;
+  width: 236px;
   height: 290px;
   overflow: hidden;
 }
 #decrypt_summary div.decrypted_file {
-  left: -240px;
+  left: -236px;
   transition: left 450ms ease-in-out;
 }
 #decrypt_summary div.decrypted_file.current {
   left: 0px;
 }
 #decrypt_summary div.decrypted_file.expired {
-  left: 240px;
+  left: 236px;
 }
 
 #decrypt_summary div.text {

@@ -41,19 +41,15 @@
       (function() {
         var permit, _i, _len, _ref;
       
-        __out.push('File Name:        ');
-      
-        __out.push(__sanitize(this.miniLockFileName));
-      
-        __out.push('\nFile Size:\nHeader Size:\nCiphertext Size:  \nminiLock Version: ');
+        __out.push('miniLock Version: <div class="version">');
       
         __out.push(__sanitize(this.version));
       
-        __out.push('\nEphemeral Key:    ');
+        __out.push('</div>\nFile Size:\nHeader Size:\nCiphertext Size:\nEphemeral Key:    <div class="emphemeral">');
       
         __out.push(this.ephemeralKeyHTML);
       
-        __out.push('\nDecrypt Info:     <span class="punctuation">{');
+        __out.push('</div>\nDecrypt Info:     <span class="punctuation">{');
       
         if (this.encryptedPermits.length === 0) {
           __out.push(__sanitize("}"));

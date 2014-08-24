@@ -48,22 +48,33 @@
 </div>
 <section id="introduction_section">
   <p>
-    These details are available when you inspect a miniLock file without a key:
+    This info is available when you inspect a miniLock file without a key:
   </p>
-  <div id="unencrypted_summary">
-    <pre id="unencrypted_summary_pre"></pre>
-    <div id="minilock_file_size_graphic">
-      <div class="file bar"><label>0 bytes</label></div>
-      <div class="header bar"><label>0 bytes</label></div>
-      <div class="ciphertext bar"><label>0 bytes</label></div>
-      <svg class="x axis"></svg>
-    </div>
+
+  <div id="minilock_file_summary">
+    <svg class="file_size x axis"></svg>
+    <dl class="minilock_file_summary">
+
+      <dt>File Size:</dt>
+      <dd class="size"><div class="file bar"></div><label class="file">? bytes</label></dd>
+      <dt>Header Size:</dt>
+      <dd class="size"><div class="header bar"></div><label class="header">? bytes</label></dd>
+      <dt>Ciphertext Size:</dt>
+      <dd class="size"><div class="ciphertext bar"></div><label class="ciphertext">? bytes</label></dd>
+      <dt>miniLock Version:</dt>
+      <dd><div id="minilock_file_version">?</div></dd>
+
+      <dt>Ephemeral Key:</dt>
+      <dd><div id="minilock_file_empemeral">?</div></dd>
+      <dt>Decrypt Info:</dt>
+      <dd class="decrypt_info"><div id="minilock_file_decrypt_info">?</div></dd>
+    </dl>
   </div>
   <p>
-    A secret key is required to decrypt the file and see more details.
+    A secret key is required to see more details and decrypt the file.
   </p>
   <p>
-    Lets try to open <code id="introduction_minilock_filename">Secret.minilock</code> with one of these keys:
+    Lets attempt to open <code id="introduction_minilock_filename">Secret.minilock</code> with one of these keys:
   </p>
   <div id="decrypt_keys"></div>
   <div id="decrypt_status"><div class="empty_placeholder"></div></div>

@@ -121,7 +121,7 @@
 
   setupFileSizeGraphic = function() {
     var svg;
-    svg = d3.select("#minilock_file_size_graphic svg");
+    svg = d3.select("#minilock_file_summary svg");
     svg.append("g").attr({
       "class": "x axis",
       transform: "translate(0,0)"
@@ -132,50 +132,59 @@
   };
 
   renderFileSizeGraphic = function(operation, sizeOfHeader) {
-    var duration, graphicHeight, graphicWidth, previousSize, scale, sizeOfCiphertext, svg, tick, tickValues, xAxis, _ref;
+    var duration, graphicWidth, max, previousSize, scale, sizeOfCiphertext, svg, tick, tickValues, xAxis, _ref;
     previousSize = (_ref = renderFileSizeGraphic.previousSize) != null ? _ref : 0;
     renderFileSizeGraphic.previousSize = operation.data.size;
     duration = Math.abs(previousSize - operation.data.size) / 25;
     duration = Math.min(600, duration);
     duration = Math.max(250, duration);
     sizeOfCiphertext = operation.data.size - 8 - 4 - sizeOfHeader;
-    graphicWidth = $("#minilock_file_size_graphic").width();
-    graphicHeight = $("#minilock_file_size_graphic").height();
+    graphicWidth = $("#minilock_file_summary dd").width();
     svg = setupFileSizeGraphic();
     svg.attr({
       width: graphicWidth,
-      height: graphicHeight
+      height: 30 * 3
     });
-    scale = d3.scale.linear().domain([0, operation.data.size]).range([0, graphicWidth]);
+    max = Math.max(operation.data.size, 1024 * 2.5);
+    scale = d3.scale.linear().domain([0, max]).range([0, graphicWidth - 150]);
     tickValues = (function() {
-      var _i, _ref1, _results;
+      var _i, _results;
       _results = [];
-      for (tick = _i = 0, _ref1 = operation.data.size; _i <= _ref1; tick = _i += 1024) {
+      for (tick = _i = 0; _i < max; tick = _i += 1024) {
         _results.push(tick);
       }
       return _results;
     })();
-    xAxis = d3.svg.axis().scale(scale).orient("bottom").tickSize(90).tickValues(tickValues);
+    xAxis = d3.svg.axis().scale(scale).orient("bottom").tickSize(30 * 3).tickValues(tickValues);
     svg.select("g.x.axis").transition().duration(duration).ease("quad-out").call(xAxis);
-    d3.select("#minilock_file_size_graphic div.file").style({
+    d3.select("#minilock_file_summary div.file").style({
       "width": scale(operation.data.size) + "px",
       "transition-duration": duration + "ms"
     });
-    d3.select("#minilock_file_size_graphic div.header").style({
+    d3.select("#minilock_file_summary div.header").style({
       "width": scale(sizeOfHeader) + "px",
       "transition-duration": duration + "ms"
     });
-    d3.select("#minilock_file_size_graphic div.ciphertext").style({
+    d3.select("#minilock_file_summary div.ciphertext").style({
       "width": scale(sizeOfCiphertext) + "px",
       "transition-duration": duration + "ms"
     });
-    $("#minilock_file_size_graphic div.file label").text(operation.data.size + " bytes");
-    $("#minilock_file_size_graphic div.header label").text(sizeOfHeader + " bytes");
-    return $("#minilock_file_size_graphic div.ciphertext label").text(sizeOfCiphertext + " bytes");
+    $("#minilock_file_summary label.file").text(operation.data.size + " bytes").css({
+      "left": Math.round(scale(operation.data.size)),
+      "transition-duration": duration + "ms"
+    });
+    $("#minilock_file_summary label.header").text(sizeOfHeader + " bytes").css({
+      "left": Math.round(scale(sizeOfHeader)),
+      "transition-duration": duration + "ms"
+    });
+    return $("#minilock_file_summary label.ciphertext").text(sizeOfCiphertext + " bytes").css({
+      "left": Math.round(scale(sizeOfCiphertext)),
+      "transition-duration": duration + "ms"
+    });
   };
 
   renderIntroduction = function(operation, decrypted, header, sizeOfHeader) {
-    var encodedEncryptedPermit, encodedNonce, encryptedPermits, _ref, _ref1;
+    var encodedEncryptedPermit, encodedNonce, encryptedPermits, html, permit, _ref, _ref1;
     if (header != null ? header.decryptInfo : void 0) {
       encryptedPermits = (function() {
         var _ref, _results;
@@ -195,17 +204,18 @@
     } else {
       encryptedPermits = [];
     }
-    $('#unencrypted_summary_pre').render({
-      miniLockFileName: $('div.encrypted.input.file input[type=text]').val(),
-      miniLockFileSize: operation.data.size,
-      magicBytesHTML: renderByteStream([109, 105, 110, 105, 76, 111, 99, 107]),
-      sizeOfHeaderBytesHTML: renderByteStream(numberToByteArray(sizeOfHeader)),
-      sizeOfHeader: sizeOfHeader,
-      sizeOfCiphertext: operation.data.size - 8 - 4 - sizeOfHeader,
-      version: header.version,
-      ephemeralKeyHTML: renderByteStream(miniLockLib.NACL.util.decodeBase64(header.ephemeral)),
-      encryptedPermits: encryptedPermits
-    });
+    $('#minilock_file_version').text(header.version);
+    $('#minilock_file_empemeral').html(renderByteStream(miniLockLib.NACL.util.decodeBase64(header.ephemeral)));
+    html = ((function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = encryptedPermits.length; _i < _len; _i++) {
+        permit = encryptedPermits[_i];
+        _results.push("<div>" + permit.nonceHTML + ":" + '<span class="encoded_permit">' + permit.encoded.substr(0, 32) + '...</span></div>');
+      }
+      return _results;
+    })()).join("");
+    $('#minilock_file_decrypt_info').html(html);
     $('#introduction_minilock_filename').html($('div.encrypted.input.file input[type=text]').val());
     $('#decrypt_summary').toggleClass("empty", decrypted === void 0);
     $("#decrypted_file_container div.decrypted_file").addClass("expired");
@@ -248,11 +258,11 @@
   };
 
   renderDecryptStatus.ok = function(name) {
-    return "<div><em>Ah-ha!</em> " + name + "’s secret key unlocks the file! Look see:</div>";
+    return "<div><em>Ah-ha!</em> " + name + "’s key unlocks the file! Look see:</div>";
   };
 
   renderDecryptStatus.failed = function(name) {
-    return "<div><em>Oh-no!</em> " + name + "’s secret key doesn’t fit. There is nothing to see:</div>";
+    return "<div><em>Oh-no!</em> " + name + "’s key doesn’t fit. There is nothing to see:</div>";
   };
 
   renderMagicBytes = function(operation) {
@@ -456,7 +466,7 @@
       }
       return _results;
     })();
-    return '<span class="byte_stream">[' + bytes.join("") + ']</span>' + '<span class="byte_stream_size">' + bytes.length + '</span>';
+    return '<span class="byte_stream">' + bytes.join("") + '</span>' + '<span class="byte_stream_size">' + bytes.length + '</span>';
   };
 
   renderEncryptedInputFileArrow = function() {

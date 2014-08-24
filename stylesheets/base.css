@@ -1,4 +1,4 @@
-body, section, article, div, pre, fieldset, h1, p {
+body, section, article, div, pre, fieldset, h1, p, dl, dt, dd {
   position: relative; box-sizing: border-box; margin: 0; padding: 0;
 }
 
