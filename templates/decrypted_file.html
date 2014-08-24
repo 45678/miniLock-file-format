@@ -1,0 +1,12 @@
+<div class="decrypted_file">
+  <img src="input_file_icon.svg" class="file_icon">
+  <% if @type?.match "image/": %>
+  <div class="image">
+    <img src="<%- @url %>" height="110" width="110">
+  </div>
+  <% else: %>
+  <div class="text">
+    <%= @text %>
+  </div>
+  <% end %>
+</div>

@@ -1,6 +1,6 @@
 (function() {
   this.ecoTemplates || (this.ecoTemplates = {});
-  this.ecoTemplates["summary_of_decrypted_ciphertext.html"] = function(__obj) {
+  this.ecoTemplates["decrypted_file.html"] = function(__obj) {
     if (!__obj) __obj = {};
     var __out = [], __capture = function(callback) {
       var out = __out, result;
@@ -39,33 +39,21 @@
     }
     (function() {
       (function() {
-        if (this.version === 1) {
-          __out.push('<pre class="ciphertext">\nFile Name:    ');
-          __out.push(this.name);
-          __out.push('\nFile Size:    ');
-          if (this.size) {
-            __out.push("" + this.size + " bytes");
-          }
-          __out.push('\n\n\n</pre>');
+        var _ref;
+      
+        __out.push('<div class="decrypted_file">\n  <img src="input_file_icon.svg" class="file_icon">\n  ');
+      
+        if ((_ref = this.type) != null ? _ref.match("image/") : void 0) {
+          __out.push('\n  <div class="image">\n    <img src="');
+          __out.push(this.url);
+          __out.push('" height="110" width="110">\n  </div>\n  ');
+        } else {
+          __out.push('\n  <div class="text">\n    ');
+          __out.push(__sanitize(this.text));
+          __out.push('\n  </div>\n  ');
         }
       
-        __out.push('\n\n');
-      
-        if (this.version === 2) {
-          __out.push('<pre class="ciphertext">\nFile Name:    ');
-          __out.push(this.name);
-          __out.push('\nFile Size:    ');
-          if (this.size) {
-            __out.push("" + this.size + " bytes");
-          }
-          __out.push('\nMedia Type:   ');
-          __out.push(this.type);
-          __out.push('\nEncrypt Time: ');
-          __out.push(this.time);
-          __out.push('\n</pre>');
-        }
-      
-        __out.push('\n');
+        __out.push('\n</div>\n');
       
       }).call(this);
       

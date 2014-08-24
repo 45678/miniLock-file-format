@@ -15,6 +15,7 @@
 
 #unencrypted_summary {
   overflow: hidden;
+
 }
 
 #unencrypted_summary b.size_graphic {
@@ -32,6 +33,7 @@
 
 #unencrypted_summary pre {
   background: hsl(0, 0%, 80%);
+  min-height: 340px;
 }
 
 #unencrypted_summary #minilock_file_size_graphic {
@@ -110,8 +112,9 @@
 
 /* -------- -------- -------- -------- */
 
-#decrypt_summary.empty {
-  border-color: hsl(350, 45%, 66%);
+#decrypt_summary {
+  border: 1px solid hsl(0, 0%, 50%);
+  background-color: hsl(0, 0%, 50%);
 }
 #decrypt_summary pre:first-child {
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
@@ -124,7 +127,7 @@
 #decrypt_summary.empty div.header,
 #decrypt_summary.empty div.ciphertext {
   color: hsl(0, 0%, 50%);
-  background-color: hsl(0, 0%, 70%);
+  background: transparent;
 }
 
 #decrypt_summary {
@@ -142,6 +145,28 @@
 #decrypt_summary div.ciphertext pre {
   height: 130px;
 }
+
+
+#decrypt_summary #decrypted_file_container {
+  position: absolute;
+  z-index: 1;
+  left: 0px;
+  top: 0px;
+  width: 240px;
+  height: 290px;
+  overflow: hidden;
+}
+#decrypt_summary div.decrypted_file {
+  left: -240px;
+  transition: left 450ms ease-in-out;
+}
+#decrypt_summary div.decrypted_file.current {
+  left: 0px;
+}
+#decrypt_summary div.decrypted_file.expired {
+  left: 240px;
+}
+
 #decrypt_summary div.text {
   position: absolute;
   z-index: 1;

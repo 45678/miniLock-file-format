@@ -169,7 +169,6 @@ a.secret_key.jams {
   height: 30px;
   overflow: hidden;
   margin: 15px 0;
-
 }
 #decrypt_status em {
   font-style: normal;
@@ -187,7 +186,7 @@ a.secret_key.jams {
 }
 #decrypt_status > div.outgoing {
   margin-top: -30px;
-  transition: margin-top 200ms ease-out 100ms;
+  transition: margin-top 450ms ease-out;
 }
 
 

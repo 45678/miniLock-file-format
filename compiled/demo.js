@@ -175,7 +175,7 @@
   };
 
   renderIntroduction = function(operation, decrypted, header, sizeOfHeader) {
-    var encodedEncryptedPermit, encodedNonce, encryptedPermits, _ref;
+    var encodedEncryptedPermit, encodedNonce, encryptedPermits, _ref, _ref1;
     if (header != null ? header.decryptInfo : void 0) {
       encryptedPermits = (function() {
         var _ref, _results;
@@ -208,6 +208,16 @@
     });
     $('#introduction_minilock_filename').html($('div.encrypted.input.file input[type=text]').val());
     $('#decrypt_summary').toggleClass("empty", decrypted === void 0);
+    $("#decrypted_file_container div.decrypted_file").addClass("expired");
+    $("#decrypted_file_container").append(ecoTemplates["decrypted_file.html"]({
+      type: decrypted != null ? decrypted.type : void 0,
+      text: decrypted != null ? decrypted.text : void 0,
+      url: (decrypted != null) && ((_ref = decrypted.type) != null ? _ref.match("image/") : void 0) ? URL.createObjectURL(decrypted.data) : void 0
+    }));
+    defer(1, function() {
+      $("#decrypted_file_container div.decrypted_file").addClass("expired");
+      return $("#decrypted_file_container div.decrypted_file:last-child").removeClass("expired inserted").addClass("current");
+    });
     $("#summary_of_decrypted_ciphertext").render({
       version: header.version,
       size: decrypted != null ? decrypted.data.size : void 0,
@@ -215,7 +225,7 @@
       type: decrypted != null ? decrypted.type : void 0,
       time: decrypted != null ? decrypted.time : void 0,
       text: decrypted != null ? decrypted.text : void 0,
-      url: (decrypted != null) && ((_ref = decrypted.type) != null ? _ref.match("image/") : void 0) ? URL.createObjectURL(decrypted.data) : void 0
+      url: (decrypted != null) && ((_ref1 = decrypted.type) != null ? _ref1.match("image/") : void 0) ? URL.createObjectURL(decrypted.data) : void 0
     });
     return $("#summary_of_decrypted_header").render({
       authorName: (decrypted != null ? characters.find(decrypted.senderID).name : void 0),
@@ -232,9 +242,8 @@
     $('#decrypt_status').toggleClass("failed", decrypted == null);
     template = decrypted != null ? renderDecryptStatus.ok : renderDecryptStatus.failed;
     $('#decrypt_status').append(template(operation.keys.name));
-    $('#decrypt_status > div:first-child').addClass("outgoing");
-    return defer(250, function() {
-      return $('#decrypt_status > div:first-child').remove();
+    return $('#decrypt_status > div:first-child').addClass("outgoing").on("transitionend", function(event) {
+      return $('#decrypt_status > div.outgoing').remove();
     });
   };
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>miniLock File Format Version 2</title>
-  <link rel="stylesheet" href="stylesheets/base.css" charset="utf-8">  
+  <link rel="stylesheet" href="stylesheets/base.css" charset="utf-8">
   <link rel="stylesheet" href="stylesheets/byte_stream.css" charset="utf-8">
   <link rel="stylesheet" href="stylesheets/camera.css" charset="utf-8">
   <link rel="stylesheet" href="stylesheets/input_files.css" charset="utf-8">
@@ -19,6 +19,7 @@
   <script src="compiled/zepto.min.js" charset="utf-8"></script>
   <script src="compiled/summary_of_decrypted_ciphertext.html.js" charset="utf-8"></script>
   <script src="compiled/decrypt_keys.html.js" charset="utf-8"></script>
+  <script src="compiled/decrypted_file.html.js" charset="utf-8"></script>
   <script src="compiled/margin_byte.html.js" charset="utf-8"></script>
   <script src="compiled/unencrypted_summary_pre.html.js" charset="utf-8"></script>
   <script src="compiled/parsed_header.html.js" charset="utf-8"></script>
@@ -70,10 +71,9 @@
   <div id="decrypt_keys"></div>
   <div id="decrypt_status"><div class="empty_placeholder"></div></div>
   <div id="decrypt_summary">
-
     <div id="summary_of_decrypted_ciphertext" class="ciphertext"></div>
     <div id="summary_of_decrypted_header" class="header"></div>
-    <img src="input_file_icon.svg" class="file_icon">
+    <div id="decrypted_file_container"></div>
   </div>
   <p>Now imagine you are a computer. Still here? OK, proceed:</p>
 </section>

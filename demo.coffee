@@ -150,6 +150,18 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
     encryptedPermits: encryptedPermits
   $('#introduction_minilock_filename').html($('div.encrypted.input.file input[type=text]').val())
   $('#decrypt_summary').toggleClass("empty", decrypted is undefined)
+  $("#decrypted_file_container div.decrypted_file").addClass("expired")
+  $("#decrypted_file_container").append ecoTemplates["decrypted_file.html"](
+    type: decrypted?.type
+    text: decrypted?.text
+    url: if decrypted? and decrypted.type?.match("image/") then URL.createObjectURL(decrypted.data) else undefined
+  )
+  defer 1, ->
+    $("#decrypted_file_container div.decrypted_file").addClass("expired")
+    $("#decrypted_file_container div.decrypted_file:last-child").removeClass("expired inserted").addClass("current")
+
+
+
   $("#summary_of_decrypted_ciphertext").render
     version: header.version
     size: decrypted?.data.size
@@ -170,8 +182,8 @@ renderDecryptStatus = (operation, decrypted) ->
   $('#decrypt_status').toggleClass("failed", not decrypted?)
   template = if decrypted? then renderDecryptStatus.ok else renderDecryptStatus.failed
   $('#decrypt_status').append template(operation.keys.name)
-  $('#decrypt_status > div:first-child').addClass("outgoing")
-  defer 250, -> $('#decrypt_status > div:first-child').remove()
+  $('#decrypt_status > div:first-child').addClass("outgoing").on "transitionend", (event) ->
+    $('#decrypt_status > div.outgoing').remove()
 
 renderDecryptStatus.ok = (name) ->
   """<div><em>Ah-ha!</em> #{name}’s secret key unlocks the file! Look see:</div>"""

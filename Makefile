@@ -12,6 +12,7 @@ SCRIPTS = \
 
 COMPILED_TEMPLATES = \
 	compiled/decrypt_keys.html.js \
+	compiled/decrypted_file.html.js \
 	compiled/margin_byte.html.js \
 	compiled/parsed_header.html.js \
 	compiled/unencrypted_summary_pre.html.js \
