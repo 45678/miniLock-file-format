@@ -7,6 +7,7 @@
     "async": "^0.9.0",
     "blueimp-canvas-to-blob": "^2.1.0",
     "coffee-script": "^1.7.1",
+    "d3": "^3.4.11",
     "eco": "^1.1.0-rc-3",
     "miniLockLib": "git+https://git@github.com/45678/miniLockLib.git",
     "npm": "^1.4.24",

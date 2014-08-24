@@ -1,6 +1,6 @@
 (function() {
   this.ecoTemplates || (this.ecoTemplates = {});
-  this.ecoTemplates["unencrypted_summary.html"] = function(__obj) {
+  this.ecoTemplates["unencrypted_summary_pre.html"] = function(__obj) {
     if (!__obj) __obj = {};
     var __out = [], __capture = function(callback) {
       var out = __out, result;
@@ -41,35 +41,11 @@
       (function() {
         var permit, _i, _len, _ref;
       
-        __out.push('<pre>\nFile Name:        ');
+        __out.push('File Name:        ');
       
         __out.push(__sanitize(this.miniLockFileName));
       
-        __out.push('\nFile Size:        <b class="size_graphic" style="width:');
-      
-        __out.push(__sanitize(this.miniLockFileSize / 4));
-      
-        __out.push('px"></b> <label>');
-      
-        __out.push(__sanitize(this.miniLockFileSize));
-      
-        __out.push(' bytes</label>\nHeader Size:      <b class="header size_graphic" style="width:');
-      
-        __out.push(__sanitize(this.sizeOfHeader / 4));
-      
-        __out.push('px"></b> <label>');
-      
-        __out.push(__sanitize(this.sizeOfHeader));
-      
-        __out.push(' bytes</label>\nCiphertext Size:  <b class="ciphertext size_graphic" style="width:');
-      
-        __out.push(__sanitize(this.sizeOfCiphertext / 4));
-      
-        __out.push('px"></b> <label>');
-      
-        __out.push(__sanitize(this.sizeOfCiphertext));
-      
-        __out.push(' bytes</label>\nminiLock Version: ');
+        __out.push('\nFile Size:\nHeader Size:\nCiphertext Size:  \nminiLock Version: ');
       
         __out.push(__sanitize(this.version));
       
@@ -99,7 +75,7 @@
           __out.push('<span class="punctuation">}</span>');
         }
       
-        __out.push('\n</pre>\n');
+        __out.push('\n');
       
       }).call(this);
       

@@ -83,6 +83,7 @@ setupBookmarks = ->
       window.hashOffset = 0
 
 renderDecryptedFile = (operation, decrypted, header, sizeOfHeader) ->
+  renderFileSizeGraphic(operation, sizeOfHeader)
   renderIntroduction(operation, decrypted, header, sizeOfHeader)
   renderDecryptStatus(operation, decrypted)
   renderMagicBytes(operation)
@@ -91,6 +92,41 @@ renderDecryptedFile = (operation, decrypted, header, sizeOfHeader) ->
   renderCiphertext(operation, decrypted, header, sizeOfHeader)
   renderScrollGraph(operation, sizeOfHeader)
   renderSectionSizeGraphic(operation, sizeOfHeader)
+
+setupFileSizeGraphic = ->
+  svg = d3.select("#minilock_file_size_graphic svg")
+  svg.append("g").attr
+    class: "x axis"
+    transform: "translate(0,0)"
+  (setupFileSizeGraphic = -> svg)()
+
+renderFileSizeGraphic = (operation, sizeOfHeader) ->
+  previousSize = renderFileSizeGraphic.previousSize ? 0
+  renderFileSizeGraphic.previousSize = operation.data.size
+  duration = Math.abs(previousSize - operation.data.size) / 25
+  duration = Math.min 600, duration
+  duration = Math.max 250, duration
+  sizeOfCiphertext = operation.data.size - 8 - 4 - sizeOfHeader
+  graphicWidth = $("#minilock_file_size_graphic").width()
+  graphicHeight = $("#minilock_file_size_graphic").height()
+  svg = setupFileSizeGraphic()
+  svg.attr width: graphicWidth, height: graphicHeight
+  scale = d3.scale.linear().domain([0, operation.data.size]).range([0, graphicWidth])
+  tickValues = (tick for tick in [0..operation.data.size] by 1024)
+  xAxis = d3.svg.axis().scale(scale).orient("bottom").tickSize(90).tickValues(tickValues)
+  svg.select("g.x.axis").transition().duration(duration).ease("quad-out").call(xAxis)
+  d3.select("#minilock_file_size_graphic div.file").style
+    "width": scale(operation.data.size) + "px"
+    "transition-duration": duration + "ms"
+  d3.select("#minilock_file_size_graphic div.header").style
+    "width": scale(sizeOfHeader) + "px"
+    "transition-duration": duration + "ms"
+  d3.select("#minilock_file_size_graphic div.ciphertext").style
+    "width": scale(sizeOfCiphertext) + "px"
+    "transition-duration": duration + "ms"
+  $("#minilock_file_size_graphic div.file label").text(operation.data.size + " bytes")
+  $("#minilock_file_size_graphic div.header label").text(sizeOfHeader + " bytes")
+  $("#minilock_file_size_graphic div.ciphertext label").text(sizeOfCiphertext + " bytes")
 
 renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   if header?.decryptInfo
@@ -102,7 +138,7 @@ renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   else
     encryptedPermits = []
 
-  $('#unencrypted_summary').render
+  $('#unencrypted_summary_pre').render
     miniLockFileName: $('div.encrypted.input.file input[type=text]').val()
     miniLockFileSize: operation.data.size
     magicBytesHTML: renderByteStream [109,105,110,105,76,111,99,107]

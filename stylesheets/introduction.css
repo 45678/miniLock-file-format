@@ -1,0 +1,182 @@
+/* -------- -------- -------- -------- */
+
+#unencrypted_summary,
+#decrypt_summary {
+  margin: 20px 0px 20px 0;
+}
+#unencrypted_summary pre,
+#decrypt_summary pre {
+  padding: 5px 10px 5px;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* -------- -------- -------- -------- */
+
+#unencrypted_summary {
+  overflow: hidden;
+}
+
+#unencrypted_summary b.size_graphic {
+  display: inline-block;
+  background: hsla(0, 0%, 0%, 0.33);
+  border: 1px dotted hsla(0, 0%, 0%, 0.5);
+  height: 12px;
+  vertical-align: middle;
+  margin-top: -3px;
+}
+#unencrypted_summary label,
+#unencrypted_summary span.encoded_permit {
+  color: hsla(0, 0%, 0%, 0.33);
+}
+
+#unencrypted_summary pre {
+  background: hsl(0, 0%, 80%);
+}
+
+#unencrypted_summary #minilock_file_size_graphic {
+  position: absolute;
+  display:block;
+  top: 35px; left: 210px; right: 150px;
+  /*z-index: 1;*/
+
+  height: 90px;
+
+}
+
+#minilock_file_size_graphic svg {
+  position: absolute;
+  top: 0; left: 0;
+}
+#minilock_file_size_graphic g.tick line {
+  stroke: hsla(0, 0%, 0%, 0.15);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+#minilock_file_size_graphic g.tick text {
+  visibility: hidden;
+}
+
+#minilock_file_size_graphic g.x.axis path.domain {
+  display: none;
+}
+
+#minilock_file_size_graphic #minilock_file_size {
+  position: absolute;
+  left: 100%;
+  top: 0px;
+  width: 140px;
+}
+
+
+
+#minilock_file_size_graphic div.bar label {
+  position: absolute;
+  background: hsl(0, 0%, 80%);
+  left: 100%;
+  padding-left: 5px;
+  width: 1000px;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+#minilock_file_size_graphic div.bar {
+  /*border: 1px dotted hsla(0, 0%, 0%, 0.5);*/
+  height: 30px;
+  width: 0px;
+  transition: width 1s ease-out;
+}
+
+#minilock_file_size_graphic div.file {
+  position:absolute;
+  top: 0px;
+  left: 0px;
+  background: hsl(0, 0%, 66%);
+}
+
+#minilock_file_size_graphic div.header {
+  position:absolute;
+  top: 30px;
+  left: 0px;
+
+}
+
+#minilock_file_size_graphic div.ciphertext {
+  position:absolute;
+  top: 60px;
+  left: 0px;
+
+}
+
+/* -------- -------- -------- -------- */
+
+#decrypt_summary.empty {
+  border-color: hsl(350, 45%, 66%);
+}
+#decrypt_summary pre:first-child {
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+  padding: 5px 10px 4px;
+}
+#decrypt_summary div.header,
+#decrypt_summary div.ciphertext {
+  transition: all 300ms linear;
+}
+#decrypt_summary.empty div.header,
+#decrypt_summary.empty div.ciphertext {
+  color: hsl(0, 0%, 50%);
+  background-color: hsl(0, 0%, 70%);
+}
+
+#decrypt_summary {
+  margin-left: 0px;
+  margin: 20px 0;
+}
+#decrypt_summary img.file_icon {
+  display: block;
+  position: absolute; left: 10px; top: 10px;
+  height: 270px;
+}
+#decrypt_summary pre {
+  margin-left: 238px;
+}
+#decrypt_summary div.ciphertext pre {
+  height: 130px;
+}
+#decrypt_summary div.text {
+  position: absolute;
+  z-index: 1;
+  left: 10px;
+  top: 10px;
+  width: 216px;
+  height: 270px;
+  font-size: 29px;
+  line-height: 35px;
+  overflow: auto;
+  padding: 10px 20px;
+  word-wrap: break-word;
+}
+
+
+#decrypt_summary div.image {
+  position: absolute;
+  z-index: 1;
+  left: 10px;
+  top: 22px;
+  width: 216px;
+  height: 216px;
+
+}
+#decrypt_summary div.image img {
+  display: block;
+  width: inherit;
+  height: inherit;
+  border: 5px solid white;
+  border-bottom: 35px solid white;
+  margin: -5px;
+  box-sizing: content-box;
+  box-shadow: 0px 0px 2px hsla(0, 0%, 0%, 0.33);
+}
+
+#decrypt_summary pre.image {
+  padding-left: 130px;
+}

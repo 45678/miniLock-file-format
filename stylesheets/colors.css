@@ -26,8 +26,10 @@ nav a[href="#size_of_header"],
 nav a[href="#header"],
 #scrollgraph div.header,
 #section_sizes_graphic div.header,
-#viewfinder div.curtain div.header {
+#viewfinder div.curtain div.header,
+#minilock_file_size_graphic div.header {
   background-color: hsl(200, 50%, 66%);
+  fill: hsl(200, 50%, 66%);
 }
 
 #ciphertext_section,
@@ -37,8 +39,10 @@ nav a[href="#ciphertext"],
 #unencrypted_summary b.ciphertext,
 #scrollgraph div.ciphertext,
 #section_sizes_graphic div.ciphertext,
-#viewfinder div.curtain div.ciphertext {
+#viewfinder div.curtain div.ciphertext,
+#minilock_file_size_graphic div.ciphertext {
   background-color: hsl(150, 50%, 66%);
+  fill: hsl(150, 50%, 66%);
 }
 
 #decrypt_status.ok em,
