@@ -1,4 +1,4 @@
-a:link    { color: hsl(0, 0%, 50%);     }
+a:link    { color: hsl(0, 0%, 0%); }
 a:visited { color: hsl(275, 100%, 25%); }
 
 #magic_bytes_section,
