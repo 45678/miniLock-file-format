@@ -56,7 +56,6 @@ body.ready article.blob {
   width: 300px;
   padding: 0;
   margin: 0 0 0 96px;
-  outline: 1px solid purple;
 }
 #title .versions div.version {
   display: inline-block;
