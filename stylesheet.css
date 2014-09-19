@@ -63,7 +63,6 @@ body.ready article.blob {
   padding-left: 10px;
   width: 120px;
   box-sizing: border-box;
-  outline: 1px solid white;
 }
 
 body.v1.loading #title div.draft.version {
