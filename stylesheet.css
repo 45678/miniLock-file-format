@@ -53,14 +53,17 @@ body.ready article.blob {
 
   overflow: hidden;
   height: 60px;
-  width: 40ex;
+  width: 300px;
   padding: 0;
   margin: 0 0 0 96px;
+  outline: 1px solid purple;
 }
-#title .versions > div {
+#title .versions div.version {
   display: inline-block;
   padding-left: 10px;
-  /*outline: 1px solid white;*/
+  width: 120px;
+  box-sizing: border-box;
+  outline: 1px solid white;
 }
 
 body.v1.loading #title div.draft.version {
@@ -69,7 +72,7 @@ body.v1.loading #title div.draft.version {
   transition: none;
 }
 body.v1.ready #title div.draft.version {
-  margin-left: 8ex;
+  margin-left: 140px;
   opacity: 0;
   transition: margin-left 300ms ease-in, opacity 250ms ease-in;
 }
@@ -84,7 +87,7 @@ body.v2.loading #title .versions > div:first-child {
   transition: none;
 }
 body.v2.ready #title .versions > div:first-child {
-  margin-left: -15ex;
+  margin-left: -130px;
   transition: margin-left 300ms ease-out;
 }
 body.v2.ready #title:hover .versions > div:first-child {
