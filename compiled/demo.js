@@ -193,10 +193,10 @@
         for (encodedNonce in _ref) {
           encodedEncryptedPermit = _ref[encodedNonce];
           _results.push({
-            nonce: miniLockLib.NACL.util.decodeBase64(encodedNonce),
-            nonceHTML: renderByteStream(miniLockLib.NACL.util.decodeBase64(encodedNonce)),
+            nonce: miniLockLib.NaCl.util.decodeBase64(encodedNonce),
+            nonceHTML: renderByteStream(miniLockLib.NaCl.util.decodeBase64(encodedNonce)),
             encoded: encodedEncryptedPermit,
-            encrypted: miniLockLib.NACL.util.decodeBase64(encodedEncryptedPermit)
+            encrypted: miniLockLib.NaCl.util.decodeBase64(encodedEncryptedPermit)
           });
         }
         return _results;
@@ -205,7 +205,7 @@
       encryptedPermits = [];
     }
     $('#minilock_file_version').text(header.version);
-    $('#minilock_file_empemeral').html(renderByteStream(miniLockLib.NACL.util.decodeBase64(header.ephemeral)));
+    $('#minilock_file_empemeral').html(renderByteStream(miniLockLib.NaCl.util.decodeBase64(header.ephemeral)));
     html = ((function() {
       var _i, _len, _results;
       _results = [];
@@ -269,7 +269,7 @@
     var byte, bytesAsArray, bytesAsBase16;
     bytesAsArray = [109, 105, 110, 105, 76, 111, 99, 107];
     $('#magic_bytes_in_base10').html(JSON.stringify(bytesAsArray));
-    $('#utf8_encoded_magic_bytes').html(miniLockLib.NACL.util.encodeUTF8(bytesAsArray));
+    $('#utf8_encoded_magic_bytes').html(miniLockLib.NaCl.util.encodeUTF8(bytesAsArray));
     bytesAsBase16 = (function() {
       var _i, _len, _results;
       _results = [];
@@ -296,7 +296,7 @@
       ephemeral: header.ephemeral,
       decryptInfo: JSON.stringify(header.decryptInfo, void 0, 2)
     });
-    ephemeralKey = miniLockLib.NACL.util.decodeBase64(header.ephemeral);
+    ephemeralKey = miniLockLib.NaCl.util.decodeBase64(header.ephemeral);
     ephemeralArray = (function() {
       var _i, _len, _results;
       _results = [];
@@ -309,7 +309,7 @@
     $('#decoded_ephemeral_key').html(renderByteStream(ephemeralArray));
     $('#encoded_ephemeral_key').html(JSON.stringify(header.ephemeral));
     $("#number_of_permits").html(Object.keys(header.decryptInfo).length);
-    permitForRender = "senderID:    " + (decrypted != null ? '"' + decrypted.senderID + '"' : '') + "\nrecipientID: " + (decrypted != null ? '"' + decrypted.recipientID + '"' : '') + "\nfileInfo:\n  fileKey:   " + (decrypted != null ? '"' + miniLockLib.NACL.util.encodeBase64(decrypted.fileKey) + '"' : '') + "\n  fileNonce: " + (decrypted != null ? '"' + miniLockLib.NACL.util.encodeBase64(decrypted.fileNonce) + '"' : '') + "\n  fileHash:  " + (decrypted != null ? '"' + miniLockLib.NACL.util.encodeBase64(decrypted.fileHash) + '"' : '');
+    permitForRender = "senderID:    " + (decrypted != null ? '"' + decrypted.senderID + '"' : '') + "\nrecipientID: " + (decrypted != null ? '"' + decrypted.recipientID + '"' : '') + "\nfileInfo:\n  fileKey:   " + (decrypted != null ? '"' + miniLockLib.NaCl.util.encodeBase64(decrypted.fileKey) + '"' : '') + "\n  fileNonce: " + (decrypted != null ? '"' + miniLockLib.NaCl.util.encodeBase64(decrypted.fileNonce) + '"' : '') + "\n  fileHash:  " + (decrypted != null ? '"' + miniLockLib.NaCl.util.encodeBase64(decrypted.fileHash) + '"' : '');
     $('#permit_with_encoded_file_info').html(permitForRender);
     permitForRender = "fileKey:   " + (decrypted != null ? renderByteStream(decrypted.fileKey) : '') + "\nfileNonce: " + (decrypted != null ? renderByteStream(decrypted.fileNonce) : '') + "\nfileHash:  " + (decrypted != null ? renderByteStream(decrypted.fileHash) : '');
     return $('#permit').html(permitForRender);

@@ -138,15 +138,15 @@ renderFileSizeGraphic = (operation, sizeOfHeader) ->
 renderIntroduction = (operation, decrypted, header, sizeOfHeader) ->
   if header?.decryptInfo
     encryptedPermits = for encodedNonce, encodedEncryptedPermit of header.decryptInfo
-      nonce: miniLockLib.NACL.util.decodeBase64(encodedNonce)
-      nonceHTML: renderByteStream miniLockLib.NACL.util.decodeBase64(encodedNonce)
+      nonce: miniLockLib.NaCl.util.decodeBase64(encodedNonce)
+      nonceHTML: renderByteStream miniLockLib.NaCl.util.decodeBase64(encodedNonce)
       encoded: encodedEncryptedPermit
-      encrypted: miniLockLib.NACL.util.decodeBase64(encodedEncryptedPermit)
+      encrypted: miniLockLib.NaCl.util.decodeBase64(encodedEncryptedPermit)
   else
     encryptedPermits = []
 
   $('#minilock_file_version').text(header.version)
-  $('#minilock_file_empemeral').html(renderByteStream miniLockLib.NACL.util.decodeBase64(header.ephemeral))
+  $('#minilock_file_empemeral').html(renderByteStream miniLockLib.NaCl.util.decodeBase64(header.ephemeral))
 
   html = ("<div>"+permit.nonceHTML+":"+'<span class="encoded_permit">'+permit.encoded.substr(0, 32)+'...</span></div>' for permit in encryptedPermits).join("")
   $('#minilock_file_decrypt_info').html(html)
@@ -197,7 +197,7 @@ renderDecryptStatus.failed = (name) ->
 renderMagicBytes = (operation) ->
   bytesAsArray = [109,105,110,105,76,111,99,107]
   $('#magic_bytes_in_base10').html(JSON.stringify(bytesAsArray))
-  $('#utf8_encoded_magic_bytes').html(miniLockLib.NACL.util.encodeUTF8(bytesAsArray))
+  $('#utf8_encoded_magic_bytes').html(miniLockLib.NaCl.util.encodeUTF8(bytesAsArray))
   bytesAsBase16 = ("0x#{byte.toString(16)}" for byte in bytesAsArray)
   $('#magic_bytes_in_base16').html("["+bytesAsBase16.join(",")+"]")
 
@@ -212,7 +212,7 @@ renderHeader = (decrypted, header, sizeOfHeader) ->
     version: header.version
     ephemeral: header.ephemeral
     decryptInfo: JSON.stringify(header.decryptInfo, undefined, 2)
-  ephemeralKey = miniLockLib.NACL.util.decodeBase64(header.ephemeral)
+  ephemeralKey = miniLockLib.NaCl.util.decodeBase64(header.ephemeral)
   ephemeralArray = (byte for byte in ephemeralKey)
   $('#decoded_ephemeral_key').html(renderByteStream ephemeralArray)
   $('#encoded_ephemeral_key').html(JSON.stringify(header.ephemeral))
@@ -222,9 +222,9 @@ renderHeader = (decrypted, header, sizeOfHeader) ->
     senderID:    #{if decrypted? then '"'+decrypted.senderID+'"' else ''}
     recipientID: #{if decrypted? then '"'+decrypted.recipientID+'"' else ''}
     fileInfo:
-      fileKey:   #{if decrypted? then '"'+miniLockLib.NACL.util.encodeBase64(decrypted.fileKey)+'"' else ''}
-      fileNonce: #{if decrypted? then '"'+miniLockLib.NACL.util.encodeBase64(decrypted.fileNonce)+'"' else ''}
-      fileHash:  #{if decrypted? then '"'+miniLockLib.NACL.util.encodeBase64(decrypted.fileHash)+'"' else ''}
+      fileKey:   #{if decrypted? then '"'+miniLockLib.NaCl.util.encodeBase64(decrypted.fileKey)+'"' else ''}
+      fileNonce: #{if decrypted? then '"'+miniLockLib.NaCl.util.encodeBase64(decrypted.fileNonce)+'"' else ''}
+      fileHash:  #{if decrypted? then '"'+miniLockLib.NaCl.util.encodeBase64(decrypted.fileHash)+'"' else ''}
   """
   $('#permit_with_encoded_file_info').html(permitForRender)
   permitForRender = """
